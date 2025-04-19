@@ -1,0 +1,55 @@
+import { getStrapiURL } from "@/lib/utils";
+import Link from "next/link";
+
+interface Image {
+  id: number;
+  documentId: string;
+  url: string;
+  alternativeText: string | null;
+}
+
+interface Link {
+  id: number;
+  url: string;
+  text: string;
+}
+
+export interface HeroSectionProps {
+  id: number;
+  documentId: string;
+  __component: string;
+  heading: string;
+  subheading: string;
+  image: Image;
+  link: Link[];
+}
+
+export function HeroSection({ data }: { readonly data: HeroSectionProps }) {
+  const { heading, subheading, image, link } = data;
+  const imageURL = getStrapiURL() + image.url;
+
+  return (
+    <section className="relative h-[600px] overflow-hidden">
+      <video
+        loop
+        autoPlay
+        muted
+        className="absolute z-10 object-center w-full inset-0"
+      >
+        <source src={imageURL} type="video/mp4" />
+      </video>
+      <div className="relative z-10 flex flex-col items-center justify-center h-full text-center text-white bg-amber-900/30 text-shadow text-shadow-gray-950">
+        <h1 className="text-4xl font-bold md:text-5xl lg:text-6xl  bg-opacity-30">
+          {heading}
+        </h1>
+        <p className="mt-4 text-lg md:text-xl lg:text-2xl">{subheading}</p>
+        <Link
+          className="mt-8 inline-flex items-center justify-center px-6 py-3 text-base font-medium text-black bg-white rounded-md shadow hover:bg-gray-100"
+          href={link[0].url}
+        >
+          {link[0].text}
+        </Link>
+      </div>
+    </section>
+  );
+}
