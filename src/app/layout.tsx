@@ -26,7 +26,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const globalData = await getGlobalData();
-  console.dir(globalData, { depth: null });
   return (
     <html lang="en">
       <body
