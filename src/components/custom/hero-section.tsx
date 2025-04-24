@@ -1,3 +1,4 @@
+import { getUserMeLoader } from "@/data/services/get-user-me-loader";
 import { getStrapiURL } from "@/lib/utils";
 import Link from "next/link";
 
@@ -24,9 +25,17 @@ export interface HeroSectionProps {
   link: Link[];
 }
 
-export function HeroSection({ data }: { readonly data: HeroSectionProps }) {
+export async function HeroSection({
+  data,
+}: {
+  readonly data: HeroSectionProps;
+}) {
+  const user = await getUserMeLoader();
+  const userLoggedIn = user?.ok;
+
   const { heading, subheading, image, link } = data;
   const imageURL = getStrapiURL() + image.url;
+  const linkUrl = userLoggedIn ? "/dashboard" : link[0].url;
 
   return (
     <section className="relative h-[600px] overflow-hidden">
@@ -45,9 +54,9 @@ export function HeroSection({ data }: { readonly data: HeroSectionProps }) {
         <p className="mt-4 text-lg md:text-xl lg:text-2xl">{subheading}</p>
         <Link
           className="mt-8 inline-flex items-center justify-center px-6 py-3 text-base font-medium text-black bg-white rounded-md shadow hover:bg-gray-100"
-          href={link[0].url}
+          href={linkUrl}
         >
-          {link[0].text}
+          {userLoggedIn ? "Dashboard" : link[0].text}
         </Link>
       </div>
     </section>

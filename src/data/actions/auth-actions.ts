@@ -8,10 +8,16 @@ import {
   loginUserService,
 } from "@/data/services/auth-service";
 
+export interface LoginState {
+  zodErrors: Record<string, string[]> | null;
+  strapiErrors: Record<string, string[]> | null;
+  message?: string;
+}
+
 const config = {
   maxAge: 60 * 60 * 24 * 7, // 1 week
   path: "/",
-  domain: process.env.HOST ?? "localhost",
+  domain: process.env.HOST,
   httpOnly: true,
   secure: process.env.NODE_ENV === "production",
 };
@@ -28,7 +34,10 @@ const schemaRegister = z.object({
   }),
 });
 
-export async function registerUserAction(prevState: any, formData: FormData) {
+export async function registerUserAction(
+  prevState: LoginState,
+  formData: FormData
+) {
   const validatedFields = schemaRegister.safeParse({
     username: formData.get("username"),
     password: formData.get("password"),
@@ -89,7 +98,10 @@ const schemaLogin = z.object({
     }),
 });
 
-export async function loginUserAction(prevState: any, formData: FormData) {
+export async function loginUserAction(
+  prevState: LoginState,
+  formData: FormData
+) {
   const validatedFields = schemaLogin.safeParse({
     identifier: formData.get("identifier"),
     password: formData.get("password"),
