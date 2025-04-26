@@ -10,11 +10,11 @@ import {
   fileDeleteService,
   fileUploadService,
 } from "@/data/services/file-service";
-import { LoginState } from "./auth-actions";
+import { FormInitState } from "./auth-actions";
 
 export async function updateProfileAction(
   userId: string,
-  prevState: LoginState,
+  prevState: FormInitState,
   formData: FormData
 ) {
   const rawFormData = Object.fromEntries(formData);
@@ -88,7 +88,7 @@ const imageSchema = z.object({
 
 export async function uploadProfileImageAction(
   imageId: string,
-  prevState: LoginState,
+  prevState: FormInitState,
   formData: FormData
 ) {
   // GET THE LOGGED IN USER

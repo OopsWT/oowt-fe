@@ -24,7 +24,7 @@ export async function Header({ data }: { data: Readonly<HeaderProps> }) {
   if (!data) return <div>No Header Data</div>;
 
   return (
-    <header className="flex items-center justify-between px-4 py-3 bg-white shadow-md dark:bg-gray-800">
+    <header className="flex items-center justify-between px-4 py-3 bg-white/70 shadow-md dark:bg-gray-800 fixed z-30 w-full top-0 backdrop-blur-xl">
       <Logo text={logoText.text} />
       <div className="flex items-center gap-4">
         {user.ok ? (

@@ -43,7 +43,7 @@ export function ProfileImageForm({
 
   return (
     <form className={cn("space-y-4", className)} action={formAction}>
-      <div className="flex ju">
+      <div className="flex justify-end">
         <ImagePicker
           id="image"
           name="image"

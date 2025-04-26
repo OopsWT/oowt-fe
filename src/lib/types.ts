@@ -21,11 +21,12 @@ export interface Category {
 
 export interface Article {
   id: number;
+  documentId: string;
   title: string;
   slug: string;
   description: string;
   content: string; // rich markdown text
-  createdAt: string; // ISO date string
+  createdAt: Date; // ISO date string
   publishedAt: Date;
   cover: ImageData; // Assuming this is the structure of your featured image
   author: Author; // The author of the blog post

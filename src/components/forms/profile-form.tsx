@@ -32,7 +32,8 @@ function CountBox({ text }: { readonly text: number }) {
 const INITIAL_STATE = {
   data: null,
   strapiErrors: null,
-  message: null,
+  message: "",
+  zodErrors: null,
 };
 
 export function ProfileForm({

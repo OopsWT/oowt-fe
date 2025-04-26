@@ -1,10 +1,38 @@
-import { LogoutButton } from "@/components/custom/logout-button";
+import { fetchData } from "@/data/loaders";
+import { Article } from "@/lib/types";
+import { formatDate, getStrapiURL } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
 
-export default function DashboardRoute() {
+export default async function DashboardRoute() {
+  // TODO: filter by autor!
+  const articles = await fetchData<Article[]>("/api/articles?populate=*");
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <h1>Dashboard</h1>
-      <LogoutButton />
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-3">
+        {articles?.map((article: Article) => (
+          <Link href={`dashboard/articles/${article.slug}`} key={article.id}>
+            <article className="bg-white shadow-md rounded-lg overflow-hidden">
+              <Image
+                className="w-full h-48 object-cover"
+                src={getStrapiURL() + article.cover.url}
+                alt={article.title}
+                width={150}
+                height={38}
+                priority
+              />
+              <div className="p-4">
+                <h3 className="text-lg font-bold mb-2">{article.title}</h3>
+                <p className="text-gray-600 mb-4">{article.description}</p>
+                <p className="text-sm text-gray-500">
+                  Published: {formatDate(article.publishedAt)}
+                </p>
+              </div>
+            </article>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }

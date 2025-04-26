@@ -8,7 +8,7 @@ import {
   loginUserService,
 } from "@/data/services/auth-service";
 
-export interface LoginState {
+export interface FormInitState {
   zodErrors: Record<string, string[]> | null;
   strapiErrors: Record<string, string[]> | null;
   message?: string;
@@ -35,7 +35,7 @@ const schemaRegister = z.object({
 });
 
 export async function registerUserAction(
-  prevState: LoginState,
+  prevState: FormInitState,
   formData: FormData
 ) {
   const validatedFields = schemaRegister.safeParse({
@@ -99,7 +99,7 @@ const schemaLogin = z.object({
 });
 
 export async function loginUserAction(
-  prevState: LoginState,
+  prevState: FormInitState,
   formData: FormData
 ) {
   const validatedFields = schemaLogin.safeParse({

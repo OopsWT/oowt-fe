@@ -64,7 +64,6 @@ export const MapWrapper = ({ className }: { className: string }) => {
             },
           ],
         });
-        console.log("route", route);
         setDistance((route.distance / 1000).toFixed(2));
       }
     };

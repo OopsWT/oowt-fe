@@ -15,50 +15,63 @@ export default async function ArticlePage({
   const article = await getArticleBySlug<Article>(slug);
 
   return (
-    <div className="max-w-screen-md mx-auto p-4 relative">
-      {article.cover && (
-        <div className="absolute top-0 h-72 w-full my-4 -z-10">
-          <Image
-            src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
-            alt={article.title}
-            className="w-full h-full object-cover"
-            width={800}
-            height={600}
-          />
+    <div className="max-w-screen-lg mx-auto px-4 space-y-6 relative mt-14">
+      <div className="relative mb-3">
+        {/* Cover Image */}
+        {article.cover && (
+          <div className="w-full overflow-hidden relative -z-0 h-96">
+            <Image
+              src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
+              alt={article.title}
+              className="w-full h-auto object-fill -mt-50" // Adjusted for better responsiveness
+              width={800}
+              height={450} // Assuming a 16:9 aspect ratio, adjust if needed
+              priority // Load image sooner
+            />
+          </div>
+        )}
+        {/* Title and Meta */}
+        <div className="text-center w-full space-y-2 absolute top-0 flex flex-col items-center justify-center h-full margin-auto backdrop-blur-xs">
+          <h1 className="text-4xl md:text-5xl font-bold drop-shadow-lg capitalize text-white font-jet-brains text-shadow-black">
+            {article.title}
+          </h1>
+          <div className="text-sm text-gray-50">
+            Published: {formatDate(article.publishedAt)}
+          </div>
         </div>
-      )}
-      <div className="releative z-10">
-        <h1 className="text-4xl leading-[60px] capitalize text-center font-bold text-purple-800 font-jet-brains">
-          {article.title}
-        </h1>
-        <div className="w-full flex items-center justify-center font-light">
-          Published: {formatDate(article.publishedAt)}
-        </div>
+        {/* Categories Section */}
+        {article.categories && article.categories.length > 0 && (
+          <div className="flex flex-wrap justify-center gap-2 my-4 absolute bottom-3 w-full">
+            {article.categories.map(({ name, documentId }) => (
+              <span
+                key={documentId}
+                className="bg-white/10 border border-white/20 text-white px-3 py-1 rounded-full text-xs hover:bg-white/20 transition"
+              >
+                {name}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Categories Section */}
-      {article.categories && article.categories.length > 0 && (
-        <div className="flex flex-wrap space-x-2 my-4">
-          {article.categories.map(({ name, documentId }) => (
-            <span
-              key={documentId}
-              className="border rounded border-purple-900 font-medium px-2 py-2 text-sm"
-            >
-              {name}
-            </span>
-          ))}
-        </div>
-      )}
-
-      <p className="text-gray-600 leading-[32px] tracking-wide italic mt-2 mb-6">
+      {/* Description */}
+      <p className="text-gray-700 leading-relaxed italic text-center">
         {article.description}
       </p>
-      <div className="leading-[40px] max-w-screen-lg prose prose-invert">
+      {/* Content */}
+      <div className="prose max-w-none">
+        {" "}
+        {/* Use prose defaults, remove max-w-screen-lg and leading */}
         <Markdown>{article.content}</Markdown>
       </div>
-      <MapWrapper className="mt-4" />
-      <Link className="flex items-center gap-2 mt-5 underline" href="/">
-        {"<-"} Back to Blogs
+      {/* Map */}
+      <MapWrapper className="mt-6" />{" "}
+      {/* Added className back with margin-top */}
+      {/* Back Link */}
+      <Link
+        className="flex items-center gap-2 underline text-purple-600 hover:text-purple-800 my-3"
+        href="/"
+      >
+        {"<-"} Back to Articles
       </Link>
     </div>
   );
