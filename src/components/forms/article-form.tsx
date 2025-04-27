@@ -37,6 +37,13 @@ const INITIAL_STATE = {
   zodErrors: null,
 };
 
+function convertToSlug(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\w ]+/g, "")
+    .replace(/ +/g, "-");
+}
+
 export function ArticleForm({
   data,
   className,
@@ -51,10 +58,6 @@ export function ArticleForm({
   const [pointers, setPointers] = useState<number[][]>(
     data?.pointers.pointers || []
   );
-  const [title, setTitle] = useState<string>(data?.title || "");
-  const [description, setDescription] = useState<string>(
-    data?.description || ""
-  );
   const [formState, formAction] = useActionState(
     data?.documentId ? updateArticleWithId : createArticle,
     INITIAL_STATE
@@ -63,8 +66,9 @@ export function ArticleForm({
   const ref = React.useRef<MDXEditorMethods>(null);
 
   const formActionHandler = (formData: FormData) => {
-    formData.set("title", title);
-    formData.set("description", description);
+    const generatedSlug = formData.get("title");
+
+    formData.set("slug", convertToSlug(generatedSlug as string));
     formData.set("content", ref.current?.getMarkdown() || "");
     formData.set("pointers", JSON.stringify({ pointers }));
     return formAction(formData);
@@ -81,32 +85,31 @@ export function ArticleForm({
           id="title"
           name="title"
           placeholder="Article title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          defaultValue={data?.title}
         />
         <label className="font-bold">Article Description:</label>
         <Input
           id="description"
           name="description"
           placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          defaultValue={data?.description}
         />
-        <label className="font-bold">Article Content:</label>
-
-        <div className="space-y-4 w-full">
-          <MDEditor markdown={data?.content || ""} ref={ref} />
-        </div>
 
         <MapWrapper
           className="mb-4"
           onPointsChange={setPointers}
           pointers={pointers}
         />
+
+        <label className="font-bold">Article Content:</label>
+
+        <div className="space-y-4 w-full">
+          <MDEditor markdown={data?.content || ""} ref={ref} />
+        </div>
       </div>
       <div className="flex justify-end fixed bottom-25 right-40">
         <SubmitButton
-          text="Update Article"
+          text={`${data ? "Update" : "Create"} Article`}
           loadingText="Saving changes..."
           className="shadow-amber-50 cursor-pointer"
         />
