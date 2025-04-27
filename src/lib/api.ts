@@ -1,41 +1,26 @@
 import axios, { AxiosInstance } from "axios";
-import { UserArticleData } from "./types";
+import { getStrapiURL } from "./utils";
+import qs from "qs";
 
 export const api: AxiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_STRAPI_URL}`,
 });
 
-export const getAllArticles = async function (
-  page: number = 1,
-  searchQuery: string = ""
-) {
-  try {
-    // If search query exists, filter posts based on title
-    const searchFilter = searchQuery
-      ? `&filters[title][$containsi]=${searchQuery}`
-      : ""; // Search filter with the title
-    // Fetch posts with pagination and populate the required fields
-    const response = await api.get(
-      `api/articles?populate=*&pagination[page]=${page}&pagination[pageSize]=${process.env.NEXT_PUBLIC_PAGE_LIMIT}${searchFilter}`
-    );
-    return {
-      posts: response.data.data,
-      pagination: response.data.meta.pagination, // Return data and include pagination data
-    };
-  } catch (error) {
-    console.error("Error fetching blogs:", error);
-    throw new Error("Server error"); // Error handling
-  }
-};
-
 // Get post by slug
 export const getArticleBySlug = async <Article>(
   slug: string
 ): Promise<Article> => {
+  const url = new URL("/api/articles", getStrapiURL());
+
+  url.search = qs.stringify({
+    filters: {
+      slug,
+    },
+    populate: ["author.avatar", "categories"],
+  });
+
   try {
-    const response = await api.get(
-      `/api/articles?filters[slug]=${slug}&populate=*`
-    ); // Fetch a single blog post using the slug parameter
+    const response = await api.get(url.href); // Fetch a single blog post using the slug parameter
     if (response.data.data.length > 0) {
       // If post exists
       return response.data.data[0]; // Return the post data
@@ -73,17 +58,5 @@ export const uploadImage = async (image: File, refId: number) => {
   } catch (err) {
     console.error("Error uploading image:", err);
     throw err;
-  }
-};
-
-// Create a blog post and handle all fields
-export const createPost = async (postData: UserArticleData) => {
-  try {
-    const reqData = { data: { ...postData } }; // Strapi required format to post data
-    const response = await api.post("api/blogs", reqData);
-    return response.data.data;
-  } catch (error) {
-    console.error("Error creating post:", error);
-    throw new Error("Failed to create post");
   }
 };

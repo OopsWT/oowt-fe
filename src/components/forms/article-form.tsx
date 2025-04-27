@@ -6,7 +6,10 @@ import { SubmitButton } from "@/components/custom/submit-button";
 import { Input } from "@/components/ui/input";
 import { useActionState } from "react";
 import { StrapiErrors } from "@/components/custom/strapi-errors";
-import { updateArticleAction } from "@/data/actions/article-actions";
+import {
+  createArticle,
+  updateArticleAction,
+} from "@/data/actions/article-actions";
 import { ImageData } from "@/lib/types";
 import { MDEditor } from "../custom/forwardRefEditor";
 import { MapWrapper } from "../custom/mapWrapper";
@@ -38,17 +41,22 @@ export function ArticleForm({
   data,
   className,
 }: {
-  readonly data: ArticleFormProps;
+  readonly data?: ArticleFormProps;
   readonly className?: string;
 }) {
-  const updateArticleWithId = updateArticleAction.bind(null, data.documentId);
-  const [pointers, setPointers] = useState<number[][]>(data.pointers.pointers);
-  const [title, setTitle] = useState<string>(data.title || "");
+  const updateArticleWithId = updateArticleAction.bind(
+    null,
+    data?.documentId || ""
+  );
+  const [pointers, setPointers] = useState<number[][]>(
+    data?.pointers.pointers || []
+  );
+  const [title, setTitle] = useState<string>(data?.title || "");
   const [description, setDescription] = useState<string>(
-    data.description || ""
+    data?.description || ""
   );
   const [formState, formAction] = useActionState(
-    updateArticleWithId,
+    data?.documentId ? updateArticleWithId : createArticle,
     INITIAL_STATE
   );
 

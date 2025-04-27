@@ -6,17 +6,18 @@ export interface ImageData {
 
 // export Interface for Author Data
 export interface Author {
-  id: number; // Assuming each author has a unique ID
+  id: number;
   name: string;
   email: string;
-  avatar: ImageData; // Assuming the author has
+  avatar: ImageData;
+  description: string;
 }
 
 // export Interface for Category Data
 export interface Category {
-  documentId: string; // Assuming each category has a unique ID
+  documentId: string;
   name: string;
-  description: string; // Optional description
+  description: string;
 }
 
 export interface Article {

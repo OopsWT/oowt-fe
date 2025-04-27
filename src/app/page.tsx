@@ -53,14 +53,16 @@ export default async function Home() {
           {articles?.map((article: Article) => (
             <Link href={`articles/${article.slug}`} key={article.id}>
               <article className="bg-white shadow-md rounded-lg overflow-hidden">
-                <Image
-                  className="w-full h-48 object-cover"
-                  src={getStrapiURL() + article.cover.url}
-                  alt={article.title}
-                  width={150}
-                  height={38}
-                  priority
-                />
+                {article.cover?.url && (
+                  <Image
+                    className="w-full h-48 object-cover"
+                    src={getStrapiURL() + article.cover?.url}
+                    alt={article.title}
+                    width={150}
+                    height={38}
+                    priority
+                  />
+                )}
                 <div className="p-4">
                   <h3 className="text-lg font-bold mb-2">{article.title}</h3>
                   <p className="text-gray-600 mb-4">{article.description}</p>

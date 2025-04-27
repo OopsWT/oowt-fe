@@ -22,7 +22,6 @@ export async function updateArticleAction(
     pointers: rawFormData.pointers,
   };
 
-  console.log("PATLOOSA", payload);
   const responseData = await mutateData(
     "PUT",
     `/api/articles/${documentId}?${query}`,
@@ -30,8 +29,6 @@ export async function updateArticleAction(
       data: payload,
     }
   );
-
-  console.log("RES", responseData);
 
   if (!responseData) {
     return {
@@ -54,6 +51,53 @@ export async function updateArticleAction(
   return {
     ...prevState,
     message: "Article Updated",
+    data: responseData,
+    strapiErrors: null,
+  };
+}
+
+export async function createArticle(
+  prevState: FormInitState,
+  formData: FormData
+) {
+  const rawFormData = Object.fromEntries(formData);
+
+  const query = qs.stringify({
+    populate: "*",
+  });
+
+  const payload = {
+    title: rawFormData.title,
+    description: rawFormData.description,
+    content: rawFormData.content,
+    pointers: rawFormData.pointers,
+  };
+
+  const responseData = await mutateData("POST", `/api/articles?${query}`, {
+    data: payload,
+  });
+
+  if (!responseData) {
+    return {
+      ...prevState,
+      strapiErrors: null,
+      message: "Ops! Something went wrong. Please try again.",
+    };
+  }
+
+  if (responseData.error) {
+    return {
+      ...prevState,
+      strapiErrors: responseData.error,
+      message: "Failed to Update Profile.",
+    };
+  }
+
+  revalidatePath(`/dashboard/articles/${rawFormData.slug}`);
+
+  return {
+    ...prevState,
+    message: "Article Created",
     data: responseData,
     strapiErrors: null,
   };
