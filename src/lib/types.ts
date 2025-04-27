@@ -31,6 +31,9 @@ export interface Article {
   cover: ImageData; // Assuming this is the structure of your featured image
   author: Author; // The author of the blog post
   categories: Category[]; // An array of categories associated with the post
+  pointers: {
+    pointers: number[][];
+  };
 }
 
 export interface UserArticleData {

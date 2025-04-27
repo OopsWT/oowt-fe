@@ -13,7 +13,7 @@ export default async function DashboardRoute() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-3">
         {articles?.map((article: Article) => (
           <Link href={`dashboard/articles/${article.slug}`} key={article.id}>
-            <article className="bg-white shadow-md rounded-lg overflow-hidden">
+            <article className="bg-white shadow-md rounded-lg">
               <Image
                 className="w-full h-48 object-cover"
                 src={getStrapiURL() + article.cover.url}

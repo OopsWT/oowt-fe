@@ -9,6 +9,8 @@ import { StrapiErrors } from "@/components/custom/strapi-errors";
 import { updateArticleAction } from "@/data/actions/article-actions";
 import { ImageData } from "@/lib/types";
 import { MDEditor } from "../custom/forwardRefEditor";
+import { MapWrapper } from "../custom/mapWrapper";
+import { MDXEditorMethods } from "@mdxeditor/editor";
 
 interface ArticleFormProps {
   id: number;
@@ -19,7 +21,9 @@ interface ArticleFormProps {
   createdAt: Date;
   publishedAt: Date;
   documentId: string;
-  // pointers: string;
+  pointers: {
+    pointers: number[][];
+  };
   cover: ImageData;
 }
 
@@ -38,19 +42,24 @@ export function ArticleForm({
   readonly className?: string;
 }) {
   const updateArticleWithId = updateArticleAction.bind(null, data.documentId);
-  const [contentValue, setContentValue] = useState<string>();
+  const [pointers, setPointers] = useState<number[][]>(data.pointers.pointers);
+  const [title, setTitle] = useState<string>(data.title || "");
+  const [description, setDescription] = useState<string>(
+    data.description || ""
+  );
   const [formState, formAction] = useActionState(
     updateArticleWithId,
     INITIAL_STATE
   );
 
-  const formActionHandler = (formData: FormData) => {
-    formData.set("content", contentValue || "");
-    return formAction(formData);
-  };
+  const ref = React.useRef<MDXEditorMethods>(null);
 
-  const updateContentValue = (value: string) => {
-    setContentValue(value);
+  const formActionHandler = (formData: FormData) => {
+    formData.set("title", title);
+    formData.set("description", description);
+    formData.set("content", ref.current?.getMarkdown() || "");
+    formData.set("pointers", JSON.stringify({ pointers }));
+    return formAction(formData);
   };
 
   return (
@@ -64,32 +73,35 @@ export function ArticleForm({
           id="title"
           name="title"
           placeholder="Article title"
-          defaultValue={data?.title || ""}
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <label className="font-bold">Article Description:</label>
         <Input
           id="description"
           name="description"
           placeholder="Description"
-          defaultValue={data?.description || ""}
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <label className="font-bold">Article Content:</label>
-        <div className="prose">
-          <MDEditor
-            markdown={data?.content || ""}
-            onChange={updateContentValue}
-          />
+
+        <div className="space-y-4 w-full">
+          <MDEditor markdown={data?.content || ""} ref={ref} />
         </div>
 
-        {/* <Input
-          id="content"
-          name="content"
-          placeholder="Content"
-          defaultValue={data?.content || ""}
-        /> */}
+        <MapWrapper
+          className="mb-4"
+          onPointsChange={setPointers}
+          pointers={pointers}
+        />
       </div>
-      <div className="flex justify-end">
-        <SubmitButton text="Update Article" loadingText="Saving Profile" />
+      <div className="flex justify-end fixed bottom-25 right-40">
+        <SubmitButton
+          text="Update Article"
+          loadingText="Saving changes..."
+          className="shadow-amber-50 cursor-pointer"
+        />
       </div>
       <StrapiErrors error={formState?.strapiErrors} />
     </form>

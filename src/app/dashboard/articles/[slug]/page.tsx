@@ -12,8 +12,8 @@ export default async function ArticleEditRoute({
 
   return (
     <div className="flex justify-center w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4 p-4">
-        <ArticleForm data={article} className="col-span-5 w-4xl" />
+      <div className="grid grid-cols-1 lg:grid-cols-8 gap-4 p-4">
+        <ArticleForm data={article} className="col-span-5 w-6xl" />
       </div>
     </div>
   );

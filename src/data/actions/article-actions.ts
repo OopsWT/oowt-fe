@@ -19,8 +19,10 @@ export async function updateArticleAction(
     title: rawFormData.title,
     description: rawFormData.description,
     content: rawFormData.content,
+    pointers: rawFormData.pointers,
   };
 
+  console.log("PATLOOSA", payload);
   const responseData = await mutateData(
     "PUT",
     `/api/articles/${documentId}?${query}`,

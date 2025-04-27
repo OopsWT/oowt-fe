@@ -5,17 +5,18 @@ import { getArticleBySlug } from "@/lib/api";
 import { Article } from "@/lib/types";
 import { formatDate } from "@/lib/utils";
 import { MapWrapper } from "@/components/custom/mapWrapper";
+import rehypeRaw from "rehype-raw";
 
 export default async function ArticlePage({
   params,
 }: {
   params: { slug: string };
 }) {
-  const { slug } = params;
+  const { slug } = await params;
   const article = await getArticleBySlug<Article>(slug);
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4 space-y-6 relative mt-14">
+    <div className="max-w-screen-lg mx-auto px-4 space-y-6 relative mt-24">
       <div className="relative mb-3">
         {/* Cover Image */}
         {article.cover && (
@@ -61,17 +62,21 @@ export default async function ArticlePage({
       <div className="prose max-w-none">
         {" "}
         {/* Use prose defaults, remove max-w-screen-lg and leading */}
-        <Markdown>{article.content}</Markdown>
+        <Markdown rehypePlugins={[rehypeRaw]}>{article.content}</Markdown>
       </div>
       {/* Map */}
-      <MapWrapper className="mt-6" />{" "}
+      <MapWrapper
+        className="mt-6"
+        pointers={article.pointers.pointers}
+        isDisplayOnly
+      />
       {/* Added className back with margin-top */}
       {/* Back Link */}
       <Link
-        className="flex items-center gap-2 underline text-purple-600 hover:text-purple-800 my-3"
+        className="flex items-center gap-2 underlin hover:text-purple-800 my-3"
         href="/"
       >
-        {"<-"} Back to Articles
+        {"<"} Back to Articles
       </Link>
     </div>
   );

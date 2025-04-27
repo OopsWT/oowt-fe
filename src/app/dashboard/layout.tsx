@@ -6,7 +6,7 @@ export default function DashboardLayout({
   readonly children: React.ReactNode;
 }) {
   return (
-    <div className="h-screen grid grid-cols-[240px_1fr] mt-16">
+    <div className="grid grid-cols-[240px_1fr] mt-24">
       <nav className="border-r bg-gray-100/40 dark:bg-gray-800/40">
         <div className="flex h-full max-h-screen flex-col gap-2">
           <div className="flex h-[60px] items-center border-b px-6">
@@ -18,7 +18,7 @@ export default function DashboardLayout({
               <span className="">Dashboard</span>
             </Link>
           </div>
-          <div className="flex-1 overflow-auto py-2">
+          <div className="flex-1 py-2">
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
@@ -39,7 +39,7 @@ export default function DashboardLayout({
           </div>
         </div>
       </nav>
-      <main className="flex flex-col overflow-scroll">{children}</main>
+      <main className="flex flex-col">{children}</main>
     </div>
   );
 }

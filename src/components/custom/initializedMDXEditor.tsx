@@ -35,6 +35,7 @@ export default function InitializedMDXEditor({
         markdownShortcutPlugin(),
         imagePlugin(),
         toolbarPlugin({
+          toolbarClassName: "!top-25",
           toolbarContents: () => (
             <>
               <UndoRedo />

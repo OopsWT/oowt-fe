@@ -11,12 +11,31 @@ import Map, {
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useCallback, useEffect, useState } from "react";
 import { MapPin } from "../vectors/mapPin";
+import { COLORS } from "../ui/consts";
 
 const TOKEN = process.env.NEXT_PUBLIC_MAPS_TOKEN;
 type Transport = "cycling" | "driving";
 
-export const MapWrapper = ({ className }: { className: string }) => {
-  const [points, setPoints] = useState<number[][]>([]);
+enum STYLES {
+  SATELLITE = "mapbox://styles/mapbox/satellite-streets-v12",
+  OOWT = "mapbox://styles/piotrti89/cm9vbcoe900hc01s05lmc3786",
+  STREETS = "mapbox://styles/piotrti89/cm9vb55sw00gk01pg60by1rgf",
+}
+
+export const MapWrapper = ({
+  className,
+  onPointsChange,
+  pointers,
+  isDisplayOnly = false,
+}: {
+  className?: string;
+  onPointsChange?: (
+    value: number[][] | ((prevState: number[][]) => number[][])
+  ) => void;
+  pointers: number[][];
+  isDisplayOnly?: boolean;
+}) => {
+  const [style, setStyle] = useState<STYLES>(STYLES.OOWT);
   const [transport, setTransport] = useState<Transport>("driving");
   const [routeGeoJSON, setRouteGeoJSON] = useState<{
     type: "FeatureCollection";
@@ -36,17 +55,19 @@ export const MapWrapper = ({ className }: { className: string }) => {
   const handleMapClick = useCallback(
     (event: { lngLat: { lng: number; lat: number } }) => {
       const { lngLat } = event;
-      setPoints((prev) => [...prev, [lngLat.lng, lngLat.lat]]);
+      if (onPointsChange) {
+        onPointsChange((prev) => [...prev, [lngLat.lng, lngLat.lat]]);
+      }
     },
-    []
+    [onPointsChange]
   );
 
   useEffect(() => {
     const fetchRoute = async () => {
-      if (points.length < 2) return;
+      if (pointers.length < 2) return;
       setDistance(null);
 
-      const coords = points.map((p) => `${p[0]},${p[1]}`).join(";");
+      const coords = pointers.map((p) => `${p[0]},${p[1]}`).join(";");
       const url = `https://api.mapbox.com/directions/v5/mapbox/${transport}/${coords}?geometries=geojson&access_token=${TOKEN}`;
 
       const res = await fetch(url);
@@ -69,23 +90,27 @@ export const MapWrapper = ({ className }: { className: string }) => {
     };
 
     fetchRoute();
-  }, [points, transport]);
+  }, [pointers, transport]);
 
   const handleUndo = () => {
-    setPoints((prev) => prev.slice(0, -1));
-    if (points.length <= 2) {
-      setDistance(null);
+    if (onPointsChange) {
+      onPointsChange(pointers.slice(0, -1));
+      if (pointers.length <= 2) {
+        setDistance(null);
+      }
     }
   };
 
   const handleClear = () => {
-    setPoints([]);
-    setDistance(null);
+    if (onPointsChange) {
+      onPointsChange([]);
+      setDistance(null);
+    }
   };
 
   const openInGoogleMaps = () => {
-    if (points.length < 2) return;
-    const [start, ...rest] = points;
+    if (pointers.length < 2) return;
+    const [start, ...rest] = pointers;
     const waypoints = rest.map((p) => `${p[1]},${p[0]}`).join("/");
     const url = `https://www.google.com/maps/dir/${start[1]},${start[0]}/${waypoints}`;
     window.open(url, "_blank");
@@ -116,6 +141,8 @@ export const MapWrapper = ({ className }: { className: string }) => {
     a.click();
   };
 
+  if (!pointers) return;
+
   return (
     <div className={className}>
       <Map
@@ -125,10 +152,8 @@ export const MapWrapper = ({ className }: { className: string }) => {
           latitude: 53.0,
           zoom: 12,
         }}
-        style={{ width: 740, height: 400, borderRadius: "8px" }}
-        // mapStyle="mapbox://styles/piotrti89/cm9vbcoe900hc01s05lmc3786"
-        mapStyle="mapbox://styles/mapbox/satellite-streets-v12"
-        // mapStyle="mapbox://styles/piotrti89/cm9vb55sw00gk01pg60by1rgf"
+        style={{ width: 992, height: 500, borderRadius: "8px" }}
+        mapStyle={style}
         attributionControl={false}
         onClick={handleMapClick}
       >
@@ -136,53 +161,57 @@ export const MapWrapper = ({ className }: { className: string }) => {
         <GeolocateControl />
         <NavigationControl visualizePitch />
 
-        {points.map((coord, index) => (
+        {pointers.map((coord, index) => (
           <Marker
             key={index}
             longitude={coord[0]}
             latitude={coord[1]}
-            draggable
+            draggable={!isDisplayOnly}
             onDragEnd={(e) => {
-              const { lngLat } = e;
-              setPoints((prev) => {
-                const updated = [...prev];
-                updated[index] = [lngLat.lng, lngLat.lat];
-                return updated;
-              });
+              if (onPointsChange) {
+                const { lngLat } = e;
+                onPointsChange((prev) => {
+                  const updated = [...prev];
+                  updated[index] = [lngLat.lng, lngLat.lat];
+                  return updated;
+                });
+              }
             }}
             anchor="bottom"
           >
             <MapPin />
           </Marker>
         ))}
-        {points.length >= 2 && routeGeoJSON && (
+        {pointers.length >= 2 && routeGeoJSON && (
           <Source id="route" type="geojson" data={routeGeoJSON}>
             <Layer
               id="route-line"
               type="line"
               paint={{
-                "line-color": "#ff5500",
+                "line-color": COLORS.PRIMARY,
                 "line-width": 4,
               }}
             />
           </Source>
         )}
-        {points.length > 0 && (
+        {pointers.length > 0 && (
           <>
-            <div className="absolute h-9 flex top-3 left-3 rounded shadow-md bg-white border">
-              <button
-                onClick={handleUndo}
-                className="border-gray-300 border-r-2 px-4 py-2 hover:bg-gray-100 transition cursor-pointer"
-              >
-                🔙
-              </button>
-              <button
-                onClick={handleClear}
-                className="px-4 py-2 hover:bg-gray-100 transition cursor-pointer"
-              >
-                Wyczyść
-              </button>
-            </div>
+            {!isDisplayOnly && (
+              <div className="absolute h-9 flex top-3 left-3 rounded shadow-md bg-white border">
+                <button
+                  onClick={handleUndo}
+                  className="border-gray-300 border-r-2 px-4 py-2 hover:bg-gray-100 transition cursor-pointer"
+                >
+                  🔙
+                </button>
+                <button
+                  onClick={handleClear}
+                  className="px-4 py-2 hover:bg-gray-100 transition cursor-pointer"
+                >
+                  Wyczyść
+                </button>
+              </div>
+            )}
             <div className="absolute h-9 flex bottom-3 right-26 rounded shadow-md bg-white border">
               <button
                 onClick={openInGoogleMaps}
@@ -204,24 +233,52 @@ export const MapWrapper = ({ className }: { className: string }) => {
             Trasa: <strong>{distance} km</strong>
           </div>
         )}
-        <div className="absolute flex bottom-3 right-3 bg-white border rounded border-gray-300 transition cursor-pointer">
-          <span
-            className={`w-10 h-9 mx-auto text-center text-2xl border-r-2 hover:bg-gray-200 ${
-              transport === "cycling" && "bg-gray-200"
+        <div className="absolute text-xs flex flex-col bottom-15 right-3 bg-white shadow-md border rounded border-gray-300 transition cursor-pointer">
+          <button
+            className={`w-7 h-7 border-b-1 cursor-pointer ${
+              style === STYLES.SATELLITE && "bg-gray-200"
             }`}
-            onClick={() => setTransport("cycling")}
+            onClick={() => setStyle(STYLES.SATELLITE)}
           >
-            🚲
-          </span>
-          <span
-            className={`w-10 h-9 text-2xl text-center mx-auto hover:bg-gray-200 ${
-              transport !== "cycling" && "bg-gray-200"
+            SAT
+          </button>
+          <button
+            className={`w-7 h-7 border-b-1 cursor-pointer ${
+              style === STYLES.STREETS && "bg-gray-200"
             }`}
-            onClick={() => setTransport("driving")}
+            onClick={() => setStyle(STYLES.STREETS)}
           >
-            🏍️
-          </span>
+            STR
+          </button>
+          <button
+            className={`w-7 h-7 border-b-1 cursor-pointer ${
+              style === STYLES.OOWT && "bg-gray-200"
+            }`}
+            onClick={() => setStyle(STYLES.OOWT)}
+          >
+            OWT
+          </button>
         </div>
+        {!isDisplayOnly && (
+          <div className="absolute flex bottom-3 right-3 bg-white shadow-md border rounded border-gray-300 transition cursor-pointer">
+            <span
+              className={`w-9 h-9 mx-auto text-center text-2xl border-r-2 hover:bg-gray-200 ${
+                transport === "cycling" && "bg-gray-200"
+              }`}
+              onClick={() => setTransport("cycling")}
+            >
+              🚲
+            </span>
+            <span
+              className={`w-9 h-9 text-2xl text-center mx-auto hover:bg-gray-200 ${
+                transport !== "cycling" && "bg-gray-200"
+              }`}
+              onClick={() => setTransport("driving")}
+            >
+              🏍️
+            </span>
+          </div>
+        )}
       </Map>
     </div>
   );
