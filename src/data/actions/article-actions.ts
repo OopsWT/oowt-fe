@@ -71,6 +71,7 @@ export async function createArticle(
     description: rawFormData.description,
     content: rawFormData.content,
     pointers: rawFormData.pointers,
+    slug: rawFormData.slug,
   };
 
   const responseData = await mutateData("POST", `/api/articles?${query}`, {
@@ -89,7 +90,7 @@ export async function createArticle(
     return {
       ...prevState,
       strapiErrors: responseData.error,
-      message: "Failed to Update Profile.",
+      message: "Failed to Create Article.",
     };
   }
 
