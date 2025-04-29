@@ -7,9 +7,10 @@ import Map, {
   Source,
   Layer,
   Marker,
+  MapRef,
 } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { MapPin } from "../vectors/mapPin";
 import { COLORS } from "../ui/consts";
 
@@ -20,6 +21,7 @@ enum STYLES {
   SATELLITE = "mapbox://styles/mapbox/satellite-streets-v12",
   OOWT = "mapbox://styles/piotrti89/cm9vbcoe900hc01s05lmc3786",
   STREETS = "mapbox://styles/piotrti89/cm9vb55sw00gk01pg60by1rgf",
+  MINIMO = "mapbox://styles/piotrti89/cm9zrwrbf00ml01s543vw21on",
 }
 
 export const MapWrapper = ({
@@ -35,7 +37,7 @@ export const MapWrapper = ({
   pointers: number[][];
   isDisplayOnly?: boolean;
 }) => {
-  const [style, setStyle] = useState<STYLES>(STYLES.OOWT);
+  const [style, setStyle] = useState<STYLES>(STYLES.MINIMO);
   const [transport, setTransport] = useState<Transport>("driving");
   const [routeGeoJSON, setRouteGeoJSON] = useState<{
     type: "FeatureCollection";
@@ -51,6 +53,8 @@ export const MapWrapper = ({
     ];
   } | null>(null);
   const [distance, setDistance] = useState<string | null>(null);
+
+  const mapRef = useRef<MapRef | null>(null);
 
   const handleMapClick = useCallback(
     (event: { lngLat: { lng: number; lat: number } }) => {
@@ -116,6 +120,7 @@ export const MapWrapper = ({
     window.open(url, "_blank");
   };
 
+  // TODO: move to separate component
   const exportGPX = () => {
     if (!routeGeoJSON) return;
 
@@ -141,18 +146,60 @@ export const MapWrapper = ({
     a.click();
   };
 
+  const calculateCenterAndZoom = (points: number[][]) => {
+    if (points.length === 0) {
+      return { longitude: 18.63, latitude: 53.0, zoom: 12 }; // Default center and zoom
+    }
+
+    // Calculate bounding box
+    const bounds = points.reduce(
+      (acc, [lng, lat]) => {
+        acc.minLng = Math.min(acc.minLng, lng);
+        acc.minLat = Math.min(acc.minLat, lat);
+        acc.maxLng = Math.max(acc.maxLng, lng);
+        acc.maxLat = Math.max(acc.maxLat, lat);
+        return acc;
+      },
+      {
+        minLng: Infinity,
+        minLat: Infinity,
+        maxLng: -Infinity,
+        maxLat: -Infinity,
+      }
+    );
+
+    // Calculate center
+    const center = {
+      longitude: (bounds.minLng + bounds.maxLng) / 2,
+      latitude: (bounds.minLat + bounds.maxLat) / 2,
+    };
+
+    // Calculate zoom level based on the bounding box size
+    const WORLD_DIM = { width: 1024, height: 512 }; // Map dimensions in pixels
+    const ZOOM_MAX = 20;
+
+    const latDiff = bounds.maxLat - bounds.minLat;
+    const lngDiff = bounds.maxLng - bounds.minLng;
+
+    const latZoom = Math.log2(WORLD_DIM.height / latDiff);
+    const lngZoom = Math.log2(WORLD_DIM.width / lngDiff);
+
+    const zoom = Math.min(latZoom, lngZoom, ZOOM_MAX) - 2;
+
+    return { ...center, zoom: Math.floor(zoom) };
+  };
+
   if (!pointers) return;
+
+  const centerAndZoom = calculateCenterAndZoom(pointers);
 
   return (
     <div className={className}>
       <Map
+        ref={mapRef}
         mapboxAccessToken={TOKEN}
-        initialViewState={{
-          longitude: 18.63,
-          latitude: 53.0,
-          zoom: 12,
-        }}
-        style={{ width: 992, height: 500, borderRadius: "8px" }}
+        initialViewState={centerAndZoom}
+        style={{ width: "auto", height: 500, borderRadius: "6px" }}
         mapStyle={style}
         attributionControl={false}
         onClick={handleMapClick}
@@ -257,6 +304,14 @@ export const MapWrapper = ({
             onClick={() => setStyle(STYLES.OOWT)}
           >
             OWT
+          </button>
+          <button
+            className={`w-7 h-7 border-b-1 cursor-pointer ${
+              style === STYLES.MINIMO && "bg-gray-200"
+            }`}
+            onClick={() => setStyle(STYLES.MINIMO)}
+          >
+            MIN
           </button>
         </div>
         {!isDisplayOnly && (

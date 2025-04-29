@@ -1,17 +1,25 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Barlow_Condensed, PT_Sans, PT_Serif } from "next/font/google";
 import { getGlobalData } from "@/data/loaders";
 import { Header } from "@/components/custom/header";
 import { Footer } from "@/components/custom/footer";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+export const ptSans = PT_Sans({
+  variable: "--font-pt-sans",
+  weight: "400",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+export const ptSerif = PT_Serif({
+  variable: "--font-pt-serif",
+  weight: "400",
+  subsets: ["latin"],
+});
+
+export const barlowCondensed = Barlow_Condensed({
+  variable: "--font-barlow-condensed",
+  weight: "400",
   subsets: ["latin"],
 });
 
@@ -29,7 +37,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${ptSans.variable} ${ptSerif.variable} ${barlowCondensed.variable} antialiased`}
       >
         <Header data={globalData?.header} />
         {children}

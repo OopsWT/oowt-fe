@@ -22,6 +22,13 @@ export default function DashboardLayout({
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
                 className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
+                href="/dashboard/create"
+              >
+                <PieChartIcon className="h-4 w-4" />
+                New Article
+              </Link>
+              <Link
+                className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-500 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50"
                 href="/dashboard/articles"
               >
                 <ViewIcon className="h-4 w-4" />
@@ -66,25 +73,25 @@ function LayoutDashboardIcon(props: { className?: string }) {
   );
 }
 
-// function PieChartIcon(props: { className?: string }) {
-//   return (
-//     <svg
-//       {...props}
-//       xmlns="http://www.w3.org/2000/svg"
-//       width="24"
-//       height="24"
-//       viewBox="0 0 24 24"
-//       fill="none"
-//       stroke="currentColor"
-//       strokeWidth="2"
-//       strokeLinecap="round"
-//       strokeLinejoin="round"
-//     >
-//       <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
-//       <path d="M22 12A10 10 0 0 0 12 2v10z" />
-//     </svg>
-//   );
-// }
+function PieChartIcon(props: { className?: string }) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M21.21 15.89A10 10 0 1 1 8 2.83" />
+      <path d="M22 12A10 10 0 0 0 12 2v10z" />
+    </svg>
+  );
+}
 
 function UsersIcon(props: { className?: string }) {
   return (

@@ -132,6 +132,15 @@ export async function uploadProfileImageAction(
   }
 
   // UPLOAD NEW IMAGE TO MEDIA LIBRARY
+  if (!(data.image instanceof File)) {
+    return {
+      ...prevState,
+      strapiErrors: null,
+      zodErrors: null,
+      message: "Invalid image file.",
+    };
+  }
+
   const fileUploadResponse = await fileUploadService(data.image);
 
   if (!fileUploadResponse) {
