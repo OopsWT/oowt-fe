@@ -19,7 +19,8 @@ export function LoggedInUserButton({
 }: {
   readonly userData: AuthUserProps;
 }) {
-  const avatar = getStrapiMedia(userData.image.url);
+  const avatar = getStrapiMedia(userData?.image?.url);
+
   return (
     <div className="flex gap-2">
       <div className="flex gap-2 items-center mr-3">
@@ -28,7 +29,7 @@ export function LoggedInUserButton({
             width={30}
             height={30}
             src={avatar}
-            alt={userData.image.alternativeText || ""}
+            alt={userData?.image.alternativeText || ""}
             className="rounded-full border"
           />
         )}

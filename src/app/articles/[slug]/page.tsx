@@ -18,7 +18,7 @@ export default async function ArticlePage({
   const article = await getArticleBySlug<Article>(slug);
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-4 space-y-6 relative mt-40 grid grid-cols-12">
+    <div className="max-w-screen-2xl mx-auto px-24 space-y-6 relative mt-40 grid grid-cols-12">
       <section className="col-span-8 col-start-1">
         <div className="relative mb-3">
           {/* Cover Image */}
