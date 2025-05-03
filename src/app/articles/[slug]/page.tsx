@@ -18,25 +18,24 @@ export default async function ArticlePage({
   const article = await getArticleBySlug<Article>(slug);
 
   return (
-    <div className="max-w-screen-2xl mx-auto px-24 space-y-6 relative mt-40 grid grid-cols-12">
+    <div className="max-w-screen-2xl mx-auto px-4 lg:px-28 space-y-6 relative mt-26 lg:mt-40 flex flex-col md:grid md:grid-cols-12">
       <section className="col-span-8 col-start-1">
         <div className="relative mb-3">
           {/* Cover Image */}
           {/* {article.cover && (
-          <div className="w-full overflow-hidden relative -z-0 h-96">
-            <Image
-              src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
-              alt={article.title}
-              className="w-full h-auto object-fill -mt-50"
-              width={800}
-              height={450}
-              priority // Load image sooner
-            />
-          </div>
-        )} */}
+            <div className="w-full overflow-hidden relative -z-0 h-96">
+              <Image
+                src={`${process.env.NEXT_PUBLIC_STRAPI_URL}${article.cover.url}`}
+                alt={article.title}
+                className="w-full h-auto object-fill -mt-50"
+                width={800}
+                height={450}
+                priority // Load image sooner
+              />
+            </div>
+          )} */}
           {/* BreadCrumbs */}
           <p className="font-light">Europe / Poland / Kujawsko - pomorskie</p>
-
           {/* Title and Meta */}
           <div className="w-full mt-4">
             <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 font-jet-brains">
@@ -46,7 +45,6 @@ export default async function ArticlePage({
               Published: {formatDate(article.publishedAt)}
             </div>
           </div>
-
           {/* Categories Section */}
           {article.categories && article.categories.length > 0 && (
             <div className="flex flex-wrap gap-2 my-4 w-full">
@@ -116,7 +114,10 @@ export default async function ArticlePage({
             {article.author.description}
           </p>
         </div>
-        <TableOfContents markdown={article.content} />
+        <TableOfContents
+          markdown={article.content}
+          className="hidden md:block"
+        />
       </section>
     </div>
   );
