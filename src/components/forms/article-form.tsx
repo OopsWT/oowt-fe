@@ -14,6 +14,7 @@ import { ImageData } from "@/lib/types";
 import { MDEditor } from "../custom/forwardRefEditor";
 import { MapWrapper } from "../custom/mapWrapper";
 import { MDXEditorMethods } from "@mdxeditor/editor";
+import ImagesUploader from "../custom/images-uploader";
 
 interface ArticleFormProps {
   id: number;
@@ -28,6 +29,9 @@ interface ArticleFormProps {
     pointers: number[][];
   };
   cover: ImageData;
+  blocks?: {
+    files?: File[];
+  }[];
 }
 
 const INITIAL_STATE = {
@@ -36,13 +40,6 @@ const INITIAL_STATE = {
   message: "",
   zodErrors: null,
 };
-
-function convertToSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w ]+/g, "")
-    .replace(/ +/g, "-");
-}
 
 export function ArticleForm({
   data,
@@ -62,16 +59,21 @@ export function ArticleForm({
     data?.documentId ? updateArticleWithId : createArticle,
     INITIAL_STATE
   );
+  const [images, setImages] = useState<File[]>(data?.blocks[0]?.files || []);
+
+  console.log(images);
 
   const ref = React.useRef<MDXEditorMethods>(null);
 
-  const formActionHandler = (formData: FormData) => {
-    const generatedSlug = formData.get("title");
-
-    formData.set("slug", convertToSlug(generatedSlug as string));
+  const formActionHandler = async (formData: FormData) => {
     formData.set("content", ref.current?.getMarkdown() || "");
     formData.set("pointers", JSON.stringify({ pointers }));
+    formData.set("images", JSON.stringify(images));
     return formAction(formData);
+  };
+
+  const handleChangeImages = (files: File[]) => {
+    setImages(files);
   };
 
   return (
@@ -80,14 +82,18 @@ export function ArticleForm({
       action={formActionHandler}
     >
       <div className="space-y-4 grid ">
-        <label className="font-bold">Article Title:</label>
+        <label className="font-bold" htmlFor="title">
+          Article Title:
+        </label>
         <Input
           id="title"
           name="title"
           placeholder="Article title"
           defaultValue={data?.title}
         />
-        <label className="font-bold">Article Description:</label>
+        <label className="font-bold" htmlFor="description">
+          Article Description:
+        </label>
         <Input
           id="description"
           name="description"
@@ -100,6 +106,11 @@ export function ArticleForm({
           onPointsChange={setPointers}
           pointers={pointers}
         />
+
+        <label className="font-bold" htmlFor="images">
+          Images Gallery
+        </label>
+        <ImagesUploader onChange={handleChangeImages} images={images} />
 
         <label className="font-bold">Article Content:</label>
 

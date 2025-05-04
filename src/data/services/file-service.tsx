@@ -35,3 +35,28 @@ export async function fileUploadService(image: File) {
     throw error;
   }
 }
+
+export async function filesUploadService(
+  files: File[]
+): Promise<{ id: number; url: string }[]> {
+  const authToken = await getAuthToken();
+  if (!authToken) throw new Error("No auth token found");
+  const formData = new FormData();
+  files.forEach((file) => formData.append("files", file));
+
+  const baseUrl = getStrapiURL();
+  const url = new URL("/api/upload", baseUrl);
+
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${authToken}` },
+    method: "POST",
+    body: formData,
+  });
+
+  if (!res.ok) {
+    throw new Error("Upload failed");
+  }
+
+  const uploaded = await res.json();
+  return uploaded;
+}

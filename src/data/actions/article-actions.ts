@@ -3,6 +3,7 @@ import qs from "qs";
 import { FormInitState } from "./auth-actions";
 import { mutateData } from "../services/mutate-data";
 import { revalidatePath } from "next/cache";
+import { filesUploadService } from "../services/file-service";
 
 export async function updateArticleAction(
   documentId: string,
@@ -10,6 +11,8 @@ export async function updateArticleAction(
   formData: FormData
 ) {
   const rawFormData = Object.fromEntries(formData);
+  const images = rawFormData.images instanceof File ? [rawFormData.images] : [];
+  const uploadedImages = await filesUploadService(images);
 
   const query = qs.stringify({
     populate: "*",
@@ -20,6 +23,12 @@ export async function updateArticleAction(
     description: rawFormData.description,
     content: rawFormData.content,
     pointers: rawFormData.pointers,
+    blocks: JSON.stringify({
+      __component: "shared.slider",
+      images: uploadedImages.map((img: { id: number; url: string }) =>
+        String(img.id)
+      ),
+    }),
   };
 
   const responseData = await mutateData(
@@ -60,6 +69,15 @@ export async function createArticle(
   prevState: FormInitState,
   formData: FormData
 ) {
+  function convertToSlug(text: string): string {
+    return text
+      .toLowerCase()
+      .replace(/[^\w ]+/g, "")
+      .replace(/ +/g, "-");
+  }
+  const generatedSlug = formData.get("title");
+  formData.set("slug", convertToSlug(generatedSlug as string));
+
   const rawFormData = Object.fromEntries(formData);
 
   const query = qs.stringify({

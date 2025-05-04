@@ -10,6 +10,7 @@ interface ImagePickerProps {
   name: string;
   label: string;
   showCard?: boolean;
+  multiple?: boolean;
   defaultValue?: string;
 }
 
@@ -63,6 +64,7 @@ export default function ImagePicker({
   name,
   label,
   defaultValue,
+  multiple,
 }: Readonly<ImagePickerProps>) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [dataUrl, setDataUrl] = useState<string | null>(defaultValue ?? null);
@@ -83,6 +85,7 @@ export default function ImagePicker({
           onChange={handleFileChange}
           ref={fileInput}
           accept="image/*"
+          multiple={multiple}
         />
       </div>
       <ImageCard dataUrl={dataUrl ?? ""} fileInput={fileInput} />

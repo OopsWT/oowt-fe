@@ -57,8 +57,8 @@ export interface Article {
   pointers: {
     pointers: number[][];
   };
-  blocks: {
-    files: File[];
+  blocks?: {
+    files?: File[] | undefined;
   }[];
 }
 

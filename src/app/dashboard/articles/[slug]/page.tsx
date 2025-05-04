@@ -9,6 +9,7 @@ export default async function ArticleEditRoute({
 }) {
   const { slug } = await params;
   const article = await getArticleBySlug<Article>(slug);
+  console.log("ARTICLE", article);
 
   return (
     <div className="flex justify-center w-full">

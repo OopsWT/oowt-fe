@@ -4,16 +4,6 @@ import { getStrapiURL } from "@/lib/utils";
 import qs from "qs";
 
 export async function fetchData<T>(path: string, search?: string): Promise<T> {
-  // const authToken = await getAuthToken();
-
-  // const headers = {
-  //   method: "GET",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${authToken}`,
-  //   },
-  // };
-
   const url = new URL(path, getStrapiURL());
   if (search) {
     url.search = search;
