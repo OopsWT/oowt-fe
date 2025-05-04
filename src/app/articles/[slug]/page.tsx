@@ -8,6 +8,7 @@ import { MapWrapper } from "@/components/custom/mapWrapper";
 import rehypeRaw from "rehype-raw";
 import Image from "next/image";
 import { TableOfContents } from "@/components/custom/tableOfContent";
+import { Gallery } from "@/components/custom/gallery";
 
 export default async function ArticlePage({
   params,
@@ -16,6 +17,8 @@ export default async function ArticlePage({
 }) {
   const { slug } = await params;
   const article = await getArticleBySlug<Article>(slug);
+
+  const images = article.blocks[0].files;
 
   return (
     <div className="max-w-screen-2xl mx-auto px-4 lg:px-28 space-y-6 relative mt-26 lg:mt-40 flex flex-col md:grid md:grid-cols-12">
@@ -69,6 +72,9 @@ export default async function ArticlePage({
           pointers={article.pointers.pointers}
           isDisplayOnly
         />
+
+        {/* Gallery */}
+        <Gallery images={images} />
 
         {/* Content */}
         <div className="prose max-w-none mt-6">

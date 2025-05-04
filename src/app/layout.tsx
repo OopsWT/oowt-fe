@@ -38,6 +38,7 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className={`${ptSans.variable} ${ptSerif.variable} ${barlowCondensed.variable} antialiased`}
+        id="__next"
       >
         <Header data={globalData?.header} />
         {children}

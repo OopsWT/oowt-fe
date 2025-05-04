@@ -20,6 +20,28 @@ export interface Category {
   description: string;
 }
 
+export interface File {
+  alternativeText: string;
+  createdAt: string;
+  height: number;
+  width: number;
+  id: number;
+  url: string;
+  name: string;
+  formats: {
+    thumbnail: {
+      height: number;
+      width: number;
+      url: string;
+    };
+    large: {
+      height: number;
+      width: number;
+      url: string;
+    };
+  };
+}
+
 export interface Article {
   id: number;
   documentId: string;
@@ -35,6 +57,9 @@ export interface Article {
   pointers: {
     pointers: number[][];
   };
+  blocks: {
+    files: File[];
+  }[];
 }
 
 export interface UserArticleData {
