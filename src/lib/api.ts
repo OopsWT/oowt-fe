@@ -12,12 +12,29 @@ export const getArticleBySlug = async <Article>(
 ): Promise<Article> => {
   const url = new URL("/api/articles", getStrapiURL());
 
-  url.search = qs.stringify({
-    filters: {
-      slug,
+  url.search = qs.stringify(
+    {
+      filters: {
+        slug,
+      },
+      populate: {
+        blocks: {
+          on: {
+            "shared.slider": {
+              populate: ["files"],
+            },
+          },
+        },
+        author: {
+          populate: ["avatar"],
+        },
+        categories: true,
+      },
     },
-    populate: ["author.avatar", "categories"],
-  });
+    {
+      encodeValuesOnly: true,
+    }
+  );
 
   try {
     const response = await api.get(url.href); // Fetch a single blog post using the slug parameter

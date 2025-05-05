@@ -10,25 +10,11 @@ import {
   createArticle,
   updateArticleAction,
 } from "@/data/actions/article-actions";
-import { ImageData } from "@/lib/types";
+import { MediaFile, Article } from "@/lib/types";
 import { MDEditor } from "../custom/forwardRefEditor";
 import { MapWrapper } from "../custom/mapWrapper";
 import { MDXEditorMethods } from "@mdxeditor/editor";
-
-interface ArticleFormProps {
-  id: number;
-  content: string;
-  slug: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  publishedAt: Date;
-  documentId: string;
-  pointers: {
-    pointers: number[][];
-  };
-  cover: ImageData;
-}
+import ImagesUploader from "../custom/images-uploader";
 
 const INITIAL_STATE = {
   data: null,
@@ -37,18 +23,11 @@ const INITIAL_STATE = {
   zodErrors: null,
 };
 
-function convertToSlug(text: string): string {
-  return text
-    .toLowerCase()
-    .replace(/[^\w ]+/g, "")
-    .replace(/ +/g, "-");
-}
-
 export function ArticleForm({
   data,
   className,
 }: {
-  readonly data?: ArticleFormProps;
+  readonly data?: Article;
   readonly className?: string;
 }) {
   const updateArticleWithId = updateArticleAction.bind(
@@ -62,16 +41,31 @@ export function ArticleForm({
     data?.documentId ? updateArticleWithId : createArticle,
     INITIAL_STATE
   );
+  const [images, setImages] = useState<MediaFile[]>(
+    data?.blocks?.[0]?.files || []
+  );
+  const [newImages, setNewImages] = useState<File[]>([]);
 
   const ref = React.useRef<MDXEditorMethods>(null);
 
-  const formActionHandler = (formData: FormData) => {
-    const generatedSlug = formData.get("title");
-
-    formData.set("slug", convertToSlug(generatedSlug as string));
+  const formActionHandler = async (formData: FormData) => {
     formData.set("content", ref.current?.getMarkdown() || "");
     formData.set("pointers", JSON.stringify({ pointers }));
+    if (newImages.length > 0) {
+      newImages.forEach((file) => {
+        formData.append("newImages", file);
+      });
+    }
+    if (images.length > 0) {
+      formData.set("images", JSON.stringify(images));
+    }
+
     return formAction(formData);
+  };
+
+  const handleChangeImages = (files: File[], preserved: MediaFile[]) => {
+    setNewImages(files);
+    setImages(preserved);
   };
 
   return (
@@ -80,14 +74,18 @@ export function ArticleForm({
       action={formActionHandler}
     >
       <div className="space-y-4 grid ">
-        <label className="font-bold">Article Title:</label>
+        <label className="font-bold" htmlFor="title">
+          Article Title:
+        </label>
         <Input
           id="title"
           name="title"
           placeholder="Article title"
           defaultValue={data?.title}
         />
-        <label className="font-bold">Article Description:</label>
+        <label className="font-bold" htmlFor="description">
+          Article Description:
+        </label>
         <Input
           id="description"
           name="description"
@@ -100,6 +98,11 @@ export function ArticleForm({
           onPointsChange={setPointers}
           pointers={pointers}
         />
+
+        <label className="font-bold" htmlFor="images">
+          Images Gallery
+        </label>
+        <ImagesUploader onChange={handleChangeImages} initialImages={images} />
 
         <label className="font-bold">Article Content:</label>
 

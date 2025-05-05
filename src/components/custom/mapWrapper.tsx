@@ -259,7 +259,11 @@ export const MapWrapper = ({
                 </button>
               </div>
             )}
-            <div className="absolute h-9 flex bottom-3 right-26 rounded shadow-md bg-white border">
+            <div
+              className={`absolute h-9 flex bottom-3 ${
+                isDisplayOnly ? "right-3" : "right-26"
+              } rounded shadow-md bg-white border`}
+            >
               <button
                 onClick={openInGoogleMaps}
                 className="border-r-2 hover:bg-gray-200 transition px-4 py-2 cursor-pointer"

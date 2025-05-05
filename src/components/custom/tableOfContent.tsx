@@ -1,5 +1,7 @@
 "use client";
 
+import clsx from "clsx";
+
 export function extractH1Headings(markdown: string) {
   const lines = markdown.split("\n");
   const headings = [];
@@ -20,7 +22,13 @@ export function extractH1Headings(markdown: string) {
   return headings;
 }
 
-export const TableOfContents = ({ markdown }: { markdown: string }) => {
+export const TableOfContents = ({
+  markdown,
+  className,
+}: {
+  markdown: string;
+  className?: string;
+}) => {
   const scrollToHeading = (id: string) => {
     const element = document.getElementById(id);
 
@@ -41,7 +49,7 @@ export const TableOfContents = ({ markdown }: { markdown: string }) => {
   };
 
   return (
-    <div className="sticky top-32">
+    <div className={clsx(className, "sticky top-32")}>
       <p className="font-barlow-condensed mb-4">Table of contents</p>
       <div className="border-l-amber-500 border-l pl-2 text-xs flex flex-col items-start">
         {extractH1Headings(markdown).map((heading) => (
