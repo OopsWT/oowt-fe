@@ -9,7 +9,7 @@ export function GalleryGrid({ images }: { images: MediaFile[] }) {
     width: img.width,
     height: img.height,
     alt: img.alternativeText || img.name,
-    aspect_ratio: img.width / img.height,
+    aspect_ratio: (img.width || 1) / (img.height || 1) || 16 / 9,
   }));
 
   const widths = [1000, 1000, 1600];
