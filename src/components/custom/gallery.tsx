@@ -1,8 +1,8 @@
 import { GalleryGrid } from "./galleryGrid";
 import { GalleryLightbox } from "./galleryLightbox";
-import { File } from "@/lib/types";
+import { MediaFile } from "@/lib/types";
 
-export async function Gallery({ images }: { images: File[] }) {
+export async function Gallery({ images }: { images: MediaFile[] }) {
   return (
     <>
       <GalleryGrid images={images} />

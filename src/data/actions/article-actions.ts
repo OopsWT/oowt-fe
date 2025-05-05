@@ -11,8 +11,20 @@ export async function updateArticleAction(
   formData: FormData
 ) {
   const rawFormData = Object.fromEntries(formData);
-  const images = rawFormData.images instanceof File ? [rawFormData.images] : [];
-  const uploadedImages = await filesUploadService(images);
+  let uploadedImages: { id: number; url: string; documentId: string }[] = [];
+
+  if (formData.getAll("newImages").length > 0) {
+    uploadedImages = await filesUploadService(
+      formData.getAll("newImages") as File[]
+    );
+  }
+
+  const allImages = [
+    ...uploadedImages.map((img: { id: number; url: string }) => img.id),
+    ...JSON.parse(rawFormData.images as string).map(
+      (img: { id: number; url: string }) => img.id
+    ),
+  ];
 
   const query = qs.stringify({
     populate: "*",
@@ -23,12 +35,12 @@ export async function updateArticleAction(
     description: rawFormData.description,
     content: rawFormData.content,
     pointers: rawFormData.pointers,
-    blocks: JSON.stringify({
-      __component: "shared.slider",
-      images: uploadedImages.map((img: { id: number; url: string }) =>
-        String(img.id)
-      ),
-    }),
+    blocks: [
+      {
+        __component: "shared.slider",
+        files: allImages,
+      },
+    ],
   };
 
   const responseData = await mutateData(
@@ -79,10 +91,15 @@ export async function createArticle(
   formData.set("slug", convertToSlug(generatedSlug as string));
 
   const rawFormData = Object.fromEntries(formData);
+  const uploadedImages = await filesUploadService(
+    formData.getAll("newImages") as File[]
+  );
 
   const query = qs.stringify({
     populate: "*",
   });
+
+  const images = uploadedImages.map((img) => img.id);
 
   const payload = {
     title: rawFormData.title,
@@ -90,6 +107,13 @@ export async function createArticle(
     content: rawFormData.content,
     pointers: rawFormData.pointers,
     slug: rawFormData.slug,
+    blocks: [
+      {
+        __component: "shared.slider",
+        files: images,
+      },
+    ],
+    cover: uploadedImages[0].id,
   };
 
   const responseData = await mutateData("POST", `/api/articles?${query}`, {

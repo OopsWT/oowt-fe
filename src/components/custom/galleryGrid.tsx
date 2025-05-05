@@ -1,9 +1,9 @@
-import { File } from "@/lib/types";
+import { MediaFile } from "@/lib/types";
 import { Gallery } from "next-gallery";
 import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/thumbnails.css";
 
-export function GalleryGrid({ images }: { images: File[] }) {
+export function GalleryGrid({ images }: { images: MediaFile[] }) {
   const galleryItems = images.map((img) => ({
     src: process.env.NEXT_PUBLIC_STRAPI_URL + img.url,
     width: img.width,

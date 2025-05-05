@@ -18,7 +18,7 @@ export default async function ArticlePage({
   const { slug } = await params;
   const article = await getArticleBySlug<Article>(slug);
 
-  const images = article.blocks[0].files;
+  const images = article.blocks && article.blocks[0].files;
 
   return (
     <div className="max-w-screen-2xl mx-auto px-4 lg:px-28 space-y-6 relative mt-26 lg:mt-40 flex flex-col md:grid md:grid-cols-12">
@@ -74,7 +74,7 @@ export default async function ArticlePage({
         />
 
         {/* Gallery */}
-        <Gallery images={images} />
+        <Gallery images={images || []} />
 
         {/* Content */}
         <div className="prose max-w-none mt-6">
@@ -106,20 +106,22 @@ export default async function ArticlePage({
         </Link>
       </section>
       <section className="col-span-3 col-start-10">
-        <div className="my-10 flex flex-col justify-center items-center">
-          <div className="size-32 rounded-full border border-black overflow-hidden">
-            <Image
-              src={getStrapiURL() + article.author.avatar.url}
-              width={200}
-              height={200}
-              alt="author avatar"
-            />
+        {article.author && (
+          <div className="my-10 flex flex-col justify-center items-center">
+            <div className="size-32 rounded-full border border-black overflow-hidden">
+              <Image
+                src={getStrapiURL() + article.author.avatar.url}
+                width={200}
+                height={200}
+                alt="author avatar"
+              />
+            </div>
+            <p className="mt-4 text-xs">Author: {article.author.name}</p>
+            <p className="text-sm mt-4 text-center">
+              {article.author.description}
+            </p>
           </div>
-          <p className="mt-4 text-xs">Author: {article.author.name}</p>
-          <p className="text-sm mt-4 text-center">
-            {article.author.description}
-          </p>
-        </div>
+        )}
         <TableOfContents
           markdown={article.content}
           className="hidden md:block"

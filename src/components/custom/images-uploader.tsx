@@ -7,52 +7,50 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
+import { MediaFile } from "@/lib/types";
 
 interface ImagesUploaderProps {
-  onChange: (files: File[]) => void;
-  images: File[];
+  initialImages?: MediaFile[];
+  onChange: (filesToUpload: File[], preservedImages: MediaFile[]) => void;
 }
 
 export default function ImagesUploader({
   onChange,
-  images,
+  initialImages = [],
 }: ImagesUploaderProps) {
-  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [filesToUpload, setFilesToUpload] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
-  const [serverImages, setServerImages] = useState<File[]>(images);
+  const [preservedImages, setPreservedImages] =
+    useState<MediaFile[]>(initialImages);
 
   useEffect(() => {
-    const objectUrls = selectedFiles.map((file) => URL.createObjectURL(file));
-    setPreviews(objectUrls);
+    onChange(filesToUpload, preservedImages);
+  }, [filesToUpload, preservedImages, onChange]);
 
-    return () => {
-      objectUrls.forEach((url) => URL.revokeObjectURL(url));
-    };
-  }, [selectedFiles]);
+  useEffect(() => {
+    const objectUrls = filesToUpload.map((file) => URL.createObjectURL(file));
+    setPreviews(objectUrls);
+    return () => objectUrls.forEach((url) => URL.revokeObjectURL(url));
+  }, [filesToUpload]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
-    const merged = [...selectedFiles, ...files];
-    setSelectedFiles(merged);
-    onChange(merged);
+    const merged = [...filesToUpload, ...files];
+    setFilesToUpload(merged);
   };
 
-  const removeImage = (index: number) => {
-    const updatedFiles = selectedFiles.filter((_, i) => i !== index);
-    setSelectedFiles(updatedFiles);
-    onChange(updatedFiles);
+  const removeServerImage = (id: number) => {
+    setPreservedImages((prev) => prev.filter((img) => img.id !== id));
   };
 
-  const removeUploadedImage = (id: number) => {
-    const filtered = serverImages.filter((img) => img.id !== id);
-    setServerImages(filtered);
+  const removeNewImage = (index: number) => {
+    setFilesToUpload((prev) => prev.filter((_, i) => i !== index));
   };
-
   return (
     <div className="border rounded-xl p-4 bg-white shadow-sm space-y-4">
       <div>
-        <Label htmlFor="images" className="text-base font-semibold">
+        <Label htmlFor="images" className="text-base">
           Upload Images
         </Label>
         <Input
@@ -61,23 +59,22 @@ export default function ImagesUploader({
           multiple
           accept="image/*"
           onChange={handleFileChange}
-          className="block w-full text-sm text-gray-500 file:mr-4 file:px-4
-          file:rounded-md file:border-0
-          file:text-sm file:font-semibold
-          file:bg-amber-100 file:text-amber-700 file:cursor-pointer file:py-0
-          hover:file:bg-blue-100"
+          className="block w-full text-sm text-gray-500 h-14
+            file:mr-4 file:mt-2 file:px-4 file:py-0 file:rounded-md file:border-0 file:cursor-pointer
+            file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 
+            hover:file:bg-blue-100"
         />
       </div>
 
       {/* Server images */}
-      {serverImages.length > 0 && (
+      {preservedImages.length > 0 && (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {serverImages.map((img) => (
+          {preservedImages.map((img) => (
             <Card
               key={img.id}
-              className="relative group overflow-hidden rounded-2xl h-30 pt-0"
+              className="relative group overflow-hidden rounded-2xl h-30 pt-0 pb-0"
             >
-              <CardContent className="p-0">
+              <CardContent className="p-0 my-auto">
                 <Image
                   src={process.env.NEXT_PUBLIC_STRAPI_URL + img.url}
                   alt={img.name || `Image ${img.id}`}
@@ -89,8 +86,9 @@ export default function ImagesUploader({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => removeUploadedImage(img.id)}
-                className="absolute top-2 right-2 bg-white/70 hover:bg-white text-red-600 hover:text-red-700 shadow transition-opacity opacity-0 group-hover:opacity-100"
+                onClick={() => removeServerImage(img.id)}
+                className="absolute top-2 right-2 bg-white/70 hover:bg-white text-red-600 hover:text-red-700
+                  shadow transition-opacity opacity-0 group-hover:opacity-100"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
@@ -104,9 +102,9 @@ export default function ImagesUploader({
           {previews.map((url, index) => (
             <Card
               key={index}
-              className="relative group overflow-hidden rounded-2xl h-30 pt-0"
+              className="relative group overflow-hidden rounded-2xl h-30 pt-0 pb-0"
             >
-              <CardContent className="p-0">
+              <CardContent className="p-0 my-auto">
                 <Image
                   src={url}
                   alt={`Preview ${index}`}
@@ -118,8 +116,9 @@ export default function ImagesUploader({
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => removeImage(index)}
-                className="absolute top-2 right-2 bg-white/70 hover:bg-white text-red-600 hover:text-red-700 shadow transition-opacity opacity-0 group-hover:opacity-100 cursor-pointer"
+                onClick={() => removeNewImage(index)}
+                className="absolute top-2 right-2 bg-white/70 hover:bg-white text-red-600 hover:text-red-700
+                  shadow transition-opacity opacity-0 group-hover:opacity-100 cursor-pointer"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>

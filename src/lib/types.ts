@@ -20,15 +20,15 @@ export interface Category {
   description: string;
 }
 
-export interface File {
-  alternativeText: string;
-  createdAt: string;
-  height: number;
-  width: number;
+export interface MediaFile {
+  alternativeText?: string;
+  createdAt?: string;
+  height?: number;
+  width?: number;
   id: number;
   url: string;
   name: string;
-  formats: {
+  formats?: {
     thumbnail: {
       height: number;
       width: number;
@@ -51,14 +51,14 @@ export interface Article {
   content: string; // rich markdown text
   createdAt: Date; // ISO date string
   publishedAt: Date;
-  cover: ImageData; // Assuming this is the structure of your featured image
+  cover: ImageData;
   author: Author; // The author of the blog post
   categories: Category[]; // An array of categories associated with the post
   pointers: {
     pointers: number[][];
   };
   blocks?: {
-    files?: File[] | undefined;
+    files?: MediaFile[];
   }[];
 }
 

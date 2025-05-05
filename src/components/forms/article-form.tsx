@@ -10,29 +10,11 @@ import {
   createArticle,
   updateArticleAction,
 } from "@/data/actions/article-actions";
-import { ImageData } from "@/lib/types";
+import { MediaFile, Article } from "@/lib/types";
 import { MDEditor } from "../custom/forwardRefEditor";
 import { MapWrapper } from "../custom/mapWrapper";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import ImagesUploader from "../custom/images-uploader";
-
-interface ArticleFormProps {
-  id: number;
-  content: string;
-  slug: string;
-  title: string;
-  description: string;
-  createdAt: Date;
-  publishedAt: Date;
-  documentId: string;
-  pointers: {
-    pointers: number[][];
-  };
-  cover: ImageData;
-  blocks?: {
-    files?: File[];
-  }[];
-}
 
 const INITIAL_STATE = {
   data: null,
@@ -45,7 +27,7 @@ export function ArticleForm({
   data,
   className,
 }: {
-  readonly data?: ArticleFormProps;
+  readonly data?: Article;
   readonly className?: string;
 }) {
   const updateArticleWithId = updateArticleAction.bind(
@@ -59,21 +41,31 @@ export function ArticleForm({
     data?.documentId ? updateArticleWithId : createArticle,
     INITIAL_STATE
   );
-  const [images, setImages] = useState<File[]>(data?.blocks[0]?.files || []);
-
-  console.log(images);
+  const [images, setImages] = useState<MediaFile[]>(
+    data?.blocks?.[0]?.files || []
+  );
+  const [newImages, setNewImages] = useState<File[]>([]);
 
   const ref = React.useRef<MDXEditorMethods>(null);
 
   const formActionHandler = async (formData: FormData) => {
     formData.set("content", ref.current?.getMarkdown() || "");
     formData.set("pointers", JSON.stringify({ pointers }));
-    formData.set("images", JSON.stringify(images));
+    if (newImages.length > 0) {
+      newImages.forEach((file) => {
+        formData.append("newImages", file);
+      });
+    }
+    if (images.length > 0) {
+      formData.set("images", JSON.stringify(images));
+    }
+
     return formAction(formData);
   };
 
-  const handleChangeImages = (files: File[]) => {
-    setImages(files);
+  const handleChangeImages = (files: File[], preserved: MediaFile[]) => {
+    setNewImages(files);
+    setImages(preserved);
   };
 
   return (
@@ -110,7 +102,7 @@ export function ArticleForm({
         <label className="font-bold" htmlFor="images">
           Images Gallery
         </label>
-        <ImagesUploader onChange={handleChangeImages} images={images} />
+        <ImagesUploader onChange={handleChangeImages} initialImages={images} />
 
         <label className="font-bold">Article Content:</label>
 
