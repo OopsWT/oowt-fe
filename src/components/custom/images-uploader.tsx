@@ -50,7 +50,7 @@ export default function ImagesUploader({
   return (
     <div className="border rounded-xl p-4 bg-white shadow-sm space-y-4">
       <div>
-        <Label htmlFor="images" className="text-base">
+        <Label htmlFor="images" className="text-base mb-2">
           Upload Images
         </Label>
         <Input

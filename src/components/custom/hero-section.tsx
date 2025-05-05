@@ -38,7 +38,7 @@ export async function HeroSection({
   const linkUrl = userLoggedIn ? "/dashboard" : link[0].url;
 
   return (
-    <section className="relative h-[600px] overflow-hidden">
+    <section className="mt-24 lg:mt-0 relative lg:h-[600px] overflow-hidden">
       <video
         loop
         autoPlay

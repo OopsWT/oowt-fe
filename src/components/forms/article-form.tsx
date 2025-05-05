@@ -106,7 +106,7 @@ export function ArticleForm({
 
         <label className="font-bold">Article Content:</label>
 
-        <div className="space-y-4 w-full">
+        <div className="space-y-4 w-full border-1 rounded-lg !min-h-90">
           <MDEditor markdown={data?.content || ""} ref={ref} />
         </div>
       </div>
