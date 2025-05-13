@@ -21,7 +21,13 @@ import { Input } from "@/components/ui/input";
 import { ZodErrors } from "@/components/custom/zod-errors";
 
 const INITIAL_STATE = {
-  data: null,
+  zodErrors: {
+    username: undefined,
+    password: undefined,
+    email: undefined,
+  },
+  strapiErrors: null,
+  message: "",
 };
 
 export function SignupForm() {
@@ -85,7 +91,7 @@ export function SignupForm() {
         <div className="mt-4 text-center text-sm">
           Have an account?
           <Link className="underline ml-2" href="signin">
-            Sing In
+            Sign In
           </Link>
         </div>
       </form>

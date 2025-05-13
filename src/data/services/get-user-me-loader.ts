@@ -12,6 +12,9 @@ export async function getUserMeLoader() {
       image: {
         fields: ["url", "alternativeText"],
       },
+      author: {
+        fields: ["id"],
+      },
     },
   });
 

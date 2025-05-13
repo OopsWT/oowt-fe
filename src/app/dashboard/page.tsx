@@ -4,28 +4,39 @@ import { formatDate, getStrapiURL } from "@/lib/utils";
 import qs from "qs";
 import Image from "next/image";
 import Link from "next/link";
-
-const dashboardQuery = qs.stringify(
-  {
-    filters: {
-      author: {
-        id: {
-          $eq: 1, // TODO - add dynamic author ID based on user
-        },
-      },
-    },
-    populate: ["cover", "author.avatar", "categories", "blocks.shared.slider"],
-  },
-  {
-    encodeValuesOnly: true,
-  }
-);
+import { getUserMeLoader } from "@/data/services/get-user-me-loader";
 
 export default async function DashboardRoute() {
+  const { ok, data: userData } = await getUserMeLoader();
+
+  console.log("********", userData);
+
+  const dashboardQuery = qs.stringify(
+    {
+      filters: {
+        author: {
+          id: {
+            $eq: ok ? userData.author.id : 0,
+          },
+        },
+      },
+      populate: [
+        "cover",
+        "author.avatar",
+        "categories",
+        "blocks.shared.slider",
+      ],
+    },
+    {
+      encodeValuesOnly: true,
+    }
+  );
+
   const articles = await fetchData<Article[]>(
     "/api/articles?populate=*",
     dashboardQuery
   );
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <h1>Dashboard</h1>
