@@ -1,12 +1,31 @@
 import { fetchData } from "@/data/loaders";
 import { Article } from "@/lib/types";
 import { formatDate, getStrapiURL } from "@/lib/utils";
+import qs from "qs";
 import Image from "next/image";
 import Link from "next/link";
 
+const dashboardQuery = qs.stringify(
+  {
+    filters: {
+      author: {
+        id: {
+          $eq: 1, // TODO - add dynamic author ID based on user
+        },
+      },
+    },
+    populate: ["cover", "author.avatar", "categories", "blocks.shared.slider"],
+  },
+  {
+    encodeValuesOnly: true,
+  }
+);
+
 export default async function DashboardRoute() {
-  // TODO: filter by autor!
-  const articles = await fetchData<Article[]>("/api/articles?populate=*");
+  const articles = await fetchData<Article[]>(
+    "/api/articles?populate=*",
+    dashboardQuery
+  );
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
       <h1>Dashboard</h1>
@@ -16,7 +35,7 @@ export default async function DashboardRoute() {
             <article className="bg-white shadow-md rounded-lg">
               {article.cover?.url && (
                 <Image
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-cover rounded-t-lg"
                   src={getStrapiURL() + article.cover.url}
                   alt={article.title}
                   width={150}

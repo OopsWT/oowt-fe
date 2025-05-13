@@ -102,7 +102,7 @@ export default function ImagesUploader({
           {previews.map((url, index) => (
             <Card
               key={index}
-              className="relative group overflow-hidden rounded-2xl h-30 pt-0 pb-0"
+              className="relative group overflow-hidden rounded-2xl h-60 pt-0 pb-0"
             >
               <CardContent className="p-0 my-auto">
                 <Image

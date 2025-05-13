@@ -4,6 +4,7 @@ import { FormInitState } from "./auth-actions";
 import { mutateData } from "../services/mutate-data";
 import { revalidatePath } from "next/cache";
 import { filesUploadService } from "../services/file-service";
+import { getAuthToken } from "../services/get-token";
 
 export async function updateArticleAction(
   documentId: string,
@@ -81,6 +82,7 @@ export async function createArticle(
   prevState: FormInitState,
   formData: FormData
 ) {
+  const authToken = await getAuthToken();
   function convertToSlug(text: string): string {
     return text
       .toLowerCase()
@@ -118,6 +120,10 @@ export async function createArticle(
 
   const responseData = await mutateData("POST", `/api/articles?${query}`, {
     data: payload,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${authToken}`,
+    },
   });
 
   if (!responseData) {
