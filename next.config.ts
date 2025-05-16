@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
   images: {
     domains: ["localhost"],
   },
+  serverActions: {
+    bodyParser: {
+      sizeLimit: "2mb",
+    },
+  },
 };
 
 export default nextConfig;

@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useActionState } from "react";
 import { updateProfileAction } from "@/data/actions/profile-actions";
 import { StrapiErrors } from "@/components/custom/strapi-errors";
+import { toast } from "sonner";
 
 interface ProfileFormProps {
   id: string;
@@ -23,7 +24,11 @@ function CountBox({ text }: { readonly text: number }) {
   const style = "font-bold text-md mx-1";
   const color = text > 0 ? "text-primary" : "text-red-500";
   return (
-    <div className="flex items-center justify-center h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none">
+    <div
+      className="flex items-center justify-center h-9 w-full rounded-md border border-input
+      bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent
+      file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none"
+    >
       You have<span className={cn(style, color)}>{text}</span>credit(s)
     </div>
   );
@@ -34,6 +39,7 @@ const INITIAL_STATE = {
   strapiErrors: null,
   message: "",
   zodErrors: null,
+  success: false,
 };
 
 export function ProfileForm({
@@ -48,6 +54,10 @@ export function ProfileForm({
     updateProfileWithId,
     INITIAL_STATE
   );
+
+  if (formState.success && formState.message) {
+    toast(formState.message);
+  }
 
   return (
     <form className={cn("space-y-4", className)} action={formAction}>

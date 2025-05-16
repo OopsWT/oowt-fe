@@ -1,6 +1,7 @@
 import axios, { AxiosInstance } from "axios";
 import { getStrapiURL } from "./utils";
 import qs from "qs";
+import { notFound } from "next/navigation";
 
 export const api: AxiosInstance = axios.create({
   baseURL: `${process.env.NEXT_PUBLIC_STRAPI_URL}`,
@@ -42,10 +43,10 @@ export const getArticleBySlug = async <Article>(
       // If post exists
       return response.data.data[0]; // Return the post data
     }
-    throw new Error("Post not found.");
+    notFound();
   } catch (error) {
     console.error("Error fetching post:", error);
-    throw new Error("Server error");
+    notFound();
   }
 };
 

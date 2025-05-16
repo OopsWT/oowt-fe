@@ -53,7 +53,7 @@ export async function HeroSection({
         </h1>
         <p className="mt-4 text-lg md:text-xl lg:text-2xl">{subheading}</p>
         <Link
-          className="mt-8 inline-flex items-center justify-center px-6 py-3 text-base font-medium text-black bg-white rounded-md shadow hover:bg-gray-100"
+          className="mt-8 inline-flex items-center justify-center px-6 py-3 text-base font-medium bg-white rounded-md shadow hover:bg-gray-100 bg-gradient-gold text-gray-900"
           href={linkUrl}
         >
           {userLoggedIn ? "Dashboard" : link[0].text}

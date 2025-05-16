@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 import { logoutAction } from "@/data/actions/auth-actions";
 import Image from "next/image";
 import { getStrapiMedia } from "@/lib/utils";
+import { MobileMenu } from "./mobileMenu";
 
 interface AuthUserProps {
   username: string;
@@ -40,14 +41,19 @@ export function LoggedInUserButton({
           {userData.username}
         </Link>
       </div>
-      <Tooltip>
-        <TooltipTrigger onClick={logoutAction}>
-          <LogOut className="w-6 h-6 hover:text-primary cursor-pointer" />
-        </TooltipTrigger>
-        <TooltipContent>
-          <p>Logout</p>
-        </TooltipContent>
-      </Tooltip>
+      <div className="hidden md:flex bg-gradient-gold w-10 h-10 items-center justify-center rounded-md border-2">
+        <Tooltip>
+          <TooltipTrigger onClick={logoutAction}>
+            <LogOut className="w-6 h-6 hover:text-primary hover:opacity-90 cursor-pointer" />
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Logout</p>
+          </TooltipContent>
+        </Tooltip>
+      </div>
+      <div className="flex md:hidden bg-gradient-gold w-10 h-10 items-center justify-center rounded-md border-2">
+        <MobileMenu />
+      </div>
     </div>
   );
 }

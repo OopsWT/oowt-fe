@@ -9,8 +9,6 @@ import { getUserMeLoader } from "@/data/services/get-user-me-loader";
 export default async function DashboardRoute() {
   const { ok, data: userData } = await getUserMeLoader();
 
-  console.log("********", userData);
-
   const dashboardQuery = qs.stringify(
     {
       filters: {
@@ -38,12 +36,12 @@ export default async function DashboardRoute() {
   );
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900">
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 pt-8">
       <h1>Dashboard</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-3">
+      <div className="px-4 md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-3">
         {articles?.map((article: Article) => (
           <Link href={`dashboard/articles/${article.slug}`} key={article.id}>
-            <article className="bg-white shadow-md rounded-lg">
+            <article className="bg-white shadow-md rounded-lg mb-4 md:mb-0">
               {article.cover?.url && (
                 <Image
                   className="w-full h-48 object-cover rounded-t-lg"

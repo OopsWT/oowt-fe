@@ -15,6 +15,7 @@ import { MDEditor } from "../custom/forwardRefEditor";
 import { MapWrapper } from "../custom/mapWrapper";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import ImagesUploader from "../custom/images-uploader";
+import { ZodErrors } from "../custom/zod-errors";
 
 const INITIAL_STATE = {
   data: null,
@@ -73,7 +74,7 @@ export function ArticleForm({
       className={cn("space-y-4 prose", className)}
       action={formActionHandler}
     >
-      <div className="space-y-4 grid ">
+      <div className="space-y-4 md:grid ">
         <label className="font-bold" htmlFor="title">
           Article Title:
         </label>
@@ -83,6 +84,8 @@ export function ArticleForm({
           placeholder="Article title"
           defaultValue={data?.title}
         />
+        <ZodErrors error={formState?.zodErrors?.title} />
+
         <label className="font-bold" htmlFor="description">
           Article Description:
         </label>
@@ -92,6 +95,7 @@ export function ArticleForm({
           placeholder="Description"
           defaultValue={data?.description}
         />
+        <ZodErrors error={formState?.zodErrors?.description} />
 
         <MapWrapper
           className="mb-4"
@@ -103,6 +107,7 @@ export function ArticleForm({
           Images Gallery
         </label>
         <ImagesUploader onChange={handleChangeImages} initialImages={images} />
+        {/* <ZodErrors error={formState?.zodErrors?.newImages} /> */}
 
         <label className="font-bold">Article Content:</label>
 
@@ -110,11 +115,11 @@ export function ArticleForm({
           <MDEditor markdown={data?.content || ""} ref={ref} />
         </div>
       </div>
-      <div className="flex justify-end fixed bottom-25 right-40">
+      <div className="flex justify-end fixed bottom-20 md:bottom-25 right-10 md:right-40 z-50">
         <SubmitButton
           text={`${data ? "Update" : "Create"} Article`}
           loadingText="Saving changes..."
-          className="shadow-amber-50 cursor-pointer"
+          className="shadow-amber-50 cursor-pointer bg-gradient-gold text-gray-900"
         />
       </div>
       <StrapiErrors error={formState?.strapiErrors} />

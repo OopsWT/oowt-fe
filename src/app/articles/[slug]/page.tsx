@@ -109,12 +109,14 @@ export default async function ArticlePage({
         {article.author && (
           <div className="my-10 flex flex-col justify-center items-center">
             <div className="size-32 rounded-full border border-black overflow-hidden">
-              <Image
-                src={getStrapiURL() + article.author.avatar.url}
-                width={200}
-                height={200}
-                alt="author avatar"
-              />
+              {article.author.avatar?.url && (
+                <Image
+                  src={getStrapiURL() + article.author.avatar.url}
+                  width={200}
+                  height={200}
+                  alt="author avatar"
+                />
+              )}
             </div>
             <p className="mt-4 text-xs">Author: {article.author.name}</p>
             <p className="text-sm mt-4 text-center">

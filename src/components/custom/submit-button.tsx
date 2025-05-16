@@ -18,6 +18,7 @@ interface SubmitButtonProps {
   loadingText: string;
   className?: string;
   loading?: boolean;
+  disabled?: boolean;
 }
 
 export function SubmitButton({
@@ -25,14 +26,15 @@ export function SubmitButton({
   loadingText,
   loading,
   className,
+  disabled,
 }: Readonly<SubmitButtonProps>) {
   const status = useFormStatus();
   return (
     <Button
       type="submit"
       aria-disabled={status.pending || loading}
-      disabled={status.pending || loading}
-      className={cn(className)}
+      disabled={disabled || status.pending || loading}
+      className={cn(className, "bg-gradient-gold")}
     >
       {status.pending || loading ? <Loader text={loadingText} /> : text}
     </Button>

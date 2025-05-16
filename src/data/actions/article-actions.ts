@@ -5,6 +5,8 @@ import { mutateData } from "../services/mutate-data";
 import { revalidatePath } from "next/cache";
 import { filesUploadService } from "../services/file-service";
 import { getAuthToken } from "../services/get-token";
+import { z } from "zod";
+import { redirect } from "next/navigation";
 
 export async function updateArticleAction(
   documentId: string,
@@ -78,6 +80,18 @@ export async function updateArticleAction(
   };
 }
 
+const schemaRegister = z.object({
+  title: z.string().min(3, {
+    message: "Title must be min. 3 characters",
+  }),
+  description: z.string().min(6).max(500, {
+    message: "Description must be between 6 and 500 characters",
+  }),
+  // newImages: z.z.array(z.any()).nonempty({
+  //   message: "Select min 1 image",
+  // }),
+});
+
 export async function createArticle(
   prevState: FormInitState,
   formData: FormData
@@ -91,6 +105,21 @@ export async function createArticle(
   }
   const generatedSlug = formData.get("title");
   formData.set("slug", convertToSlug(generatedSlug as string));
+
+  const validatedFields = schemaRegister.safeParse({
+    title: formData.get("title"),
+    description: formData.get("description"),
+    // newImages: formData.get("newImages"),
+  });
+
+  if (!validatedFields.success) {
+    return {
+      ...prevState,
+      zodErrors: validatedFields.error.flatten().fieldErrors,
+      strapiErrors: null,
+      message: "Missing Fields. Failed to Register.",
+    };
+  }
 
   const rawFormData = Object.fromEntries(formData);
   const uploadedImages = await filesUploadService(
@@ -143,7 +172,7 @@ export async function createArticle(
   }
 
   revalidatePath(`/dashboard/articles/${rawFormData.slug}`);
-
+  redirect("/dashboard");
   return {
     ...prevState,
     message: "Article Created",

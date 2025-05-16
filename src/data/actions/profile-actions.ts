@@ -58,6 +58,7 @@ export async function updateProfileAction(
     message: "Profile Updated",
     data: responseData,
     strapiErrors: null,
+    success: true,
   };
 }
 

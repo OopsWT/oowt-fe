@@ -12,6 +12,7 @@ export interface FormInitState {
   zodErrors: Record<string, string[]> | null;
   strapiErrors: Record<string, string[]> | null;
   message?: string;
+  success?: boolean;
 }
 
 const config = {

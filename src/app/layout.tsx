@@ -3,6 +3,7 @@ import { Barlow_Condensed, PT_Sans, PT_Serif } from "next/font/google";
 import { getGlobalData } from "@/data/loaders";
 import { Header } from "@/components/custom/header";
 import { Footer } from "@/components/custom/footer";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 export const ptSans = PT_Sans({
@@ -39,6 +40,7 @@ export default async function RootLayout({
       <body
         className={`${ptSans.variable} ${ptSerif.variable} ${barlowCondensed.variable} antialiased`}
       >
+        <Toaster position="bottom-center" />
         <Header data={globalData?.header} />
         {children}
         <Footer data={globalData?.footer} />
