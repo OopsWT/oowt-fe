@@ -1,9 +1,17 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Allow images from localhost
   images: {
-    domains: ["localhost", "oowt-server-production.up.railway.app"],
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "oowt-server-production.up.railway.app",
+      },
+      {
+        protocol: "http",
+        hostname: "localhost",
+      },
+    ],
   },
   serverActions: {
     bodyParser: {
