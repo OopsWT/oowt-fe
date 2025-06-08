@@ -36,7 +36,7 @@ export function ProfileImageForm({
 }) {
   const uploadProfileImageWithIdAction = uploadProfileImageAction.bind(
     null,
-    data.documentId
+    data?.documentId
   );
 
   const [formState, formAction] = useActionState(
@@ -52,7 +52,7 @@ export function ProfileImageForm({
             id="image"
             name="image"
             label="Profile Image"
-            defaultValue={data?.avatar.url || ""}
+            defaultValue={data?.avatar?.url || ""}
           />
           <ZodErrors error={formState?.zodErrors?.image} />
           <StrapiErrors error={formState?.strapiErrors} />

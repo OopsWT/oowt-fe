@@ -98,8 +98,8 @@ export const MapWrapper = ({
 
   const handleUndo = () => {
     if (onPointsChange) {
-      onPointsChange(pointers.slice(0, -1));
-      if (pointers.length <= 2) {
+      onPointsChange(pointers?.slice(0, -1));
+      if (pointers?.length <= 2) {
         setDistance(null);
       }
     }
@@ -113,7 +113,7 @@ export const MapWrapper = ({
   };
 
   const openInGoogleMaps = () => {
-    if (pointers.length < 2) return;
+    if (pointers?.length < 2) return;
     const [start, ...rest] = pointers;
     const waypoints = rest.map((p) => `${p[1]},${p[0]}`).join("/");
     const url = `https://www.google.com/maps/dir/${start[1]},${start[0]}/${waypoints}`;
@@ -208,7 +208,7 @@ export const MapWrapper = ({
         <GeolocateControl />
         <NavigationControl visualizePitch />
 
-        {pointers.map((coord, index) => (
+        {pointers?.map((coord, index) => (
           <Marker
             key={index}
             longitude={coord[0]}
@@ -229,7 +229,7 @@ export const MapWrapper = ({
             <MapPin />
           </Marker>
         ))}
-        {pointers.length >= 2 && routeGeoJSON && (
+        {pointers?.length >= 2 && routeGeoJSON && (
           <Source id="route" type="geojson" data={routeGeoJSON}>
             <Layer
               id="route-line"
@@ -241,7 +241,7 @@ export const MapWrapper = ({
             />
           </Source>
         )}
-        {pointers.length > 0 && (
+        {pointers?.length > 0 && (
           <>
             {!isDisplayOnly && (
               <div className="absolute h-9 flex top-3 left-3 rounded shadow-md bg-white border">

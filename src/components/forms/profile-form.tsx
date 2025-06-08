@@ -60,7 +60,7 @@ export function ProfileForm({
 }) {
   const updateProfileWithId = updateProfileAction.bind(
     null,
-    data.author.documentId
+    data.author?.documentId
   );
   const [formState, formAction] = useActionState(
     updateProfileWithId,

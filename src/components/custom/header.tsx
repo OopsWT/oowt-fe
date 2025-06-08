@@ -22,7 +22,7 @@ export async function Header({ data }: { data: Readonly<HeaderProps> }) {
   const user = await getUserMeLoader();
 
   let authorData = null;
-  if (user?.data.author?.id) {
+  if (user?.data?.author?.id) {
     const author = await getAuthorLoader(user.data.author.documentId);
     if (author.ok && author.data) {
       authorData = author.data;

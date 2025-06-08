@@ -69,7 +69,7 @@ export default async function ArticlePage({
         {/* Map */}
         <MapWrapper
           className="mt-6"
-          pointers={article.pointers.pointers}
+          pointers={article.pointers?.pointers}
           isDisplayOnly
         />
 

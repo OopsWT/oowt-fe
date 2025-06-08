@@ -36,7 +36,7 @@ export function ArticleForm({
     data?.documentId || ""
   );
   const [pointers, setPointers] = useState<number[][]>(
-    data?.pointers.pointers || []
+    data?.pointers?.pointers || []
   );
   const [formState, formAction] = useActionState(
     data?.documentId ? updateArticleWithId : createArticle,

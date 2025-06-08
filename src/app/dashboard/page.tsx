@@ -16,7 +16,7 @@ export default async function DashboardRoute() {
       filters: {
         author: {
           id: {
-            $eq: ok ? userData.author.id : 0,
+            $eq: ok ? userData?.author?.id : 0,
           },
         },
       },
