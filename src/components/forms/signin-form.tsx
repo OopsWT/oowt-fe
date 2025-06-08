@@ -23,7 +23,7 @@ const INITIAL_STATE = {
   zodErrors: null,
   strapiErrors: null,
   data: null,
-  message: null,
+  message: "",
 };
 
 export function SigninForm() {

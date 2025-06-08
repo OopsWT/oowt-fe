@@ -13,7 +13,7 @@ import { Gallery } from "@/components/custom/gallery";
 export default async function ArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
   const article = await getArticleBySlug<Article>(slug);

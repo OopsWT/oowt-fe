@@ -5,7 +5,7 @@ import { Article } from "@/lib/types";
 export default async function ArticleEditRoute({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
   const article = await getArticleBySlug<Article>(slug);
