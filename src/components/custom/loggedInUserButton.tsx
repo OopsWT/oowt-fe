@@ -9,7 +9,7 @@ import { MobileMenu } from "./mobileMenu";
 interface AuthUserProps {
   username: string;
   email: string;
-  image: {
+  avatar: {
     url: string;
     alternativeText: string;
   };
@@ -20,7 +20,7 @@ export function LoggedInUserButton({
 }: {
   readonly userData: AuthUserProps;
 }) {
-  const avatar = getStrapiMedia(userData?.image?.url);
+  const avatar = getStrapiMedia(userData?.avatar?.url);
 
   return (
     <div className="flex gap-2">
@@ -30,13 +30,13 @@ export function LoggedInUserButton({
             width={30}
             height={30}
             src={avatar}
-            alt={userData?.image.alternativeText || ""}
+            alt="user avatar"
             className="rounded-full border"
           />
         )}
         <Link
           href="/dashboard/account"
-          className="font-semibold hover:text-primary"
+          className="font-semibold hover:text-primary hover:underline"
         >
           {userData.username}
         </Link>

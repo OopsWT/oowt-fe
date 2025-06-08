@@ -13,8 +13,11 @@ import { StrapiErrors } from "@/components/custom/strapi-errors";
 
 interface ProfileImageFormProps {
   id: string;
-  url: string;
-  alternativeText: string;
+  documentId: string;
+  avatar: {
+    url: string;
+    alternativeText: string;
+  };
 }
 
 const initialState = {
@@ -33,7 +36,7 @@ export function ProfileImageForm({
 }) {
   const uploadProfileImageWithIdAction = uploadProfileImageAction.bind(
     null,
-    data?.id
+    data.documentId
   );
 
   const [formState, formAction] = useActionState(
@@ -43,18 +46,22 @@ export function ProfileImageForm({
 
   return (
     <form className={cn("space-y-4", className)} action={formAction}>
-      <div className="flex justify-end">
-        <ImagePicker
-          id="image"
-          name="image"
-          label="Profile Image"
-          defaultValue={data?.url || ""}
-        />
-        <ZodErrors error={formState?.zodErrors?.image} />
-        <StrapiErrors error={formState?.strapiErrors} />
-      </div>
-      <div className="flex justify-end">
-        <SubmitButton text="Update Image" loadingText="Saving Image" />
+      <div className="md:flex justify-end w-full">
+        <div className="flex flex-col w-full">
+          <ImagePicker
+            id="image"
+            name="image"
+            label="Profile Image"
+            defaultValue={data?.avatar.url || ""}
+          />
+          <ZodErrors error={formState?.zodErrors?.image} />
+          <StrapiErrors error={formState?.strapiErrors} />
+          <SubmitButton
+            text="Update Image"
+            loadingText="Saving Image"
+            className="mt-2"
+          />
+        </div>
       </div>
     </form>
   );

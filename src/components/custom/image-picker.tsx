@@ -46,7 +46,7 @@ function ImageCard({
   );
 
   return (
-    <div className="w-full relative max-h-96 max-w-96">
+    <div className="relative md:w-96">
       <div className="flex items-center space-x-4 rounded-md border p-4">
         {imagePreview}
       </div>

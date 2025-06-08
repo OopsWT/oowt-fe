@@ -5,6 +5,8 @@ import qs from "qs";
 import Image from "next/image";
 import Link from "next/link";
 import { getUserMeLoader } from "@/data/services/get-user-me-loader";
+import { MapPlusIcon } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 export default async function DashboardRoute() {
   const { ok, data: userData } = await getUserMeLoader();
@@ -37,7 +39,19 @@ export default async function DashboardRoute() {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 dark:bg-gray-900 pt-8">
-      <h1>Dashboard</h1>
+      {articles.length > 1 && (
+        <Link
+          className="flex items-center gap-2 font-semibold mb-4"
+          href="/dashboard/create"
+        >
+          <Button>
+            <MapPlusIcon className="h-6 w-6" />
+
+            <span className=""> New Article</span>
+          </Button>
+        </Link>
+      )}
+      <h1>My Articles:</h1>
       <div className="px-4 md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-3">
         {articles?.map((article: Article) => (
           <Link href={`dashboard/articles/${article.slug}`} key={article.id}>

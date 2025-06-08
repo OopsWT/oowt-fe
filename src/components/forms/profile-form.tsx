@@ -14,10 +14,17 @@ interface ProfileFormProps {
   id: string;
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
-  bio: string;
   credits: number;
+  author: {
+    id: number;
+    documentId: string;
+  };
+}
+
+interface AuthorFromProps {
+  id: string;
+  name: string;
+  description: string;
 }
 
 function CountBox({ text }: { readonly text: number }) {
@@ -44,12 +51,17 @@ const INITIAL_STATE = {
 
 export function ProfileForm({
   data,
+  authorData,
   className,
 }: {
   readonly data: ProfileFormProps;
+  readonly authorData: AuthorFromProps;
   readonly className?: string;
 }) {
-  const updateProfileWithId = updateProfileAction.bind(null, data.id);
+  const updateProfileWithId = updateProfileAction.bind(
+    null,
+    data.author.documentId
+  );
   const [formState, formAction] = useActionState(
     updateProfileWithId,
     INITIAL_STATE
@@ -61,8 +73,8 @@ export function ProfileForm({
 
   return (
     <form className={cn("space-y-4", className)} action={formAction}>
-      <div className="space-y-4 grid ">
-        <div className="grid grid-cols-3 gap-4">
+      <div className="space-y-4 flex flex-col md:grid">
+        <div className="flex flex-col md:grid grid-cols-3 gap-4">
           <Input
             id="username"
             name="username"
@@ -80,26 +92,20 @@ export function ProfileForm({
           <CountBox text={data?.credits} />
         </div>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="w-full md:w-auto md:grid grid-cols-2 gap-4">
           <Input
-            id="firstName"
-            name="firstName"
-            placeholder="First Name"
-            defaultValue={data?.firstName || ""}
-          />
-          <Input
-            id="lastName"
-            name="lastName"
-            placeholder="Last Name"
-            defaultValue={data?.lastName || ""}
+            id="name"
+            name="name"
+            placeholder="Author Name"
+            defaultValue={authorData?.name || ""}
           />
         </div>
         <Textarea
-          id="bio"
-          name="bio"
-          placeholder="Write your bio here..."
+          id="description"
+          name="description"
+          placeholder="Write your description here..."
           className="resize-none border rounded-md w-full h-[224px] p-2"
-          defaultValue={data?.bio || ""}
+          defaultValue={authorData?.description || ""}
           required
         />
       </div>

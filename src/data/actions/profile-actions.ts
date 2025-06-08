@@ -13,7 +13,7 @@ import {
 import { FormInitState } from "./auth-actions";
 
 export async function updateProfileAction(
-  userId: string,
+  authorId: string,
   prevState: FormInitState,
   formData: FormData
 ) {
@@ -24,14 +24,15 @@ export async function updateProfileAction(
   });
 
   const payload = {
-    firstName: rawFormData.firstName,
-    lastName: rawFormData.lastName,
-    bio: rawFormData.bio,
+    data: {
+      name: rawFormData.name,
+      description: rawFormData.description,
+    },
   };
 
   const responseData = await mutateData(
     "PUT",
-    `/api/users/${userId}?${query}`,
+    `/api/authors/${authorId}?${query}`,
     payload
   );
 
@@ -97,7 +98,7 @@ export async function uploadProfileImageAction(
   if (!user.ok)
     throw new Error("You are not authorized to perform this action.");
 
-  const userId = user.data.id;
+  const authorId = user.data.author.documentId;
 
   // CONVERT FORM DATA TO OBJECT
   const data = Object.fromEntries(formData);
@@ -162,14 +163,16 @@ export async function uploadProfileImageAction(
     };
   }
   const updatedImageId = fileUploadResponse[0].id;
-  const payload = { image: updatedImageId };
+  const payload = { data: { avatar: updatedImageId } };
 
   // UPDATE USER PROFILE WITH NEW IMAGE
   const updateImageResponse = await mutateData(
     "PUT",
-    `/api/users/${userId}`,
+    `/api/authors/${authorId}`,
     payload
   );
+
+  console.log("RESP", updateImageResponse);
 
   revalidatePath("/dashboard/account");
 
