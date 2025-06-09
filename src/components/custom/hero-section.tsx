@@ -44,6 +44,7 @@ export async function HeroSection({
         autoPlay
         muted
         className="absolute z-10 object-center w-full inset-0"
+        preload="auto"
       >
         <source src={imageURL} type="video/mp4" />
       </video>

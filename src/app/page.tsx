@@ -48,7 +48,7 @@ export default async function Home() {
       {homePageData && <HeroSection data={homePageData.blocks[0]} />}
 
       <div className="max-w-4xl mx-auto my-5 py-4 px-3">
-        <h2 className="text-2xl font-semibold mb-6">Articles</h2>
+        <h2 className="text-2xl font-semibold mb-6">Artykuły</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {articles?.map((article: Article) => (
             <Link href={`articles/${article.slug}`} key={article.id}>

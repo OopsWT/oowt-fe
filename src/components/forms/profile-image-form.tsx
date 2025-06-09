@@ -57,7 +57,7 @@ export function ProfileImageForm({
           <ZodErrors error={formState?.zodErrors?.image} />
           <StrapiErrors error={formState?.strapiErrors} />
           <SubmitButton
-            text="Update Image"
+            text="Zaktualizuj avatar"
             loadingText="Saving Image"
             className="mt-2"
           />

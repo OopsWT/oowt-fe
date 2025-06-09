@@ -110,7 +110,7 @@ export function ProfileForm({
         />
       </div>
       <div className="flex justify-end">
-        <SubmitButton text="Update Profile" loadingText="Saving Profile" />
+        <SubmitButton text="Zaktualizuj profil" loadingText="Saving Profile" />
       </div>
       <StrapiErrors error={formState?.strapiErrors} />
     </form>

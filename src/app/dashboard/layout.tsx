@@ -24,7 +24,7 @@ export default function DashboardLayout({
               <Button>
                 <MapPlusIcon className="h-6 w-6" />
 
-                <span className=""> New Article</span>
+                <span className="">Nowy artykuł</span>
               </Button>
             </Link>
           </div>
@@ -42,7 +42,7 @@ export default function DashboardLayout({
                 href="/dashboard"
               >
                 <ViewIcon className="h-4 w-4" />
-                My Articles
+                Moje artykuły
               </Link>
 
               <Link
@@ -50,7 +50,7 @@ export default function DashboardLayout({
                 href="/dashboard/account"
               >
                 <UsersIcon className="h-4 w-4" />
-                Author Account
+                Konto Autora
               </Link>
             </nav>
           </div>

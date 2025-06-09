@@ -47,11 +47,11 @@ export default async function DashboardRoute() {
           <Button>
             <MapPlusIcon className="h-6 w-6" />
 
-            <span className=""> New Article</span>
+            <span className="">Nowy artykuł</span>
           </Button>
         </Link>
       )}
-      <h1>My Articles:</h1>
+      <h1>Moje artykuły:</h1>
       <div className="px-4 md:grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-3">
         {articles?.map((article: Article) => (
           <Link href={`dashboard/articles/${article.slug}`} key={article.id}>
@@ -70,7 +70,7 @@ export default async function DashboardRoute() {
                 <h3 className="text-lg font-bold mb-2">{article.title}</h3>
                 <p className="text-gray-600 mb-4">{article.description}</p>
                 <p className="text-sm text-gray-500">
-                  Published: {formatDate(article.publishedAt)}
+                  Obublikowano: {formatDate(article.publishedAt)}
                 </p>
               </div>
             </article>

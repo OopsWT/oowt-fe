@@ -13,9 +13,10 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  serverActions: {
-    bodyParser: {
-      sizeLimit: "2mb",
+  experimental: {
+    serverActions: {
+      allowedOrigins: ["oowt-server-production.up.railway.app"],
+      bodySizeLimit: "4mb",
     },
   },
 };
