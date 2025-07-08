@@ -38,6 +38,7 @@ export async function updateArticleAction(
     description: rawFormData.description,
     content: rawFormData.content,
     pointers: rawFormData.pointers,
+    distance: rawFormData.distance,
     blocks: [
       {
         __component: "shared.slider",

@@ -37,6 +37,7 @@ export const MapWrapper = ({
   onPointsChange,
   pointers,
   isDisplayOnly = false,
+  setDistance: setDistanceProp, // <-- Add prop
 }: {
   className?: string;
   onPointsChange?: (
@@ -44,6 +45,7 @@ export const MapWrapper = ({
   ) => void;
   pointers: number[][];
   isDisplayOnly?: boolean;
+  setDistance?: (distance: number | null) => void; // <-- Add prop type
 }) => {
   const [style, setStyle] = useState<STYLES>(STYLES.MINIMO);
   const [transport, setTransport] = useState<Transport>("driving");
@@ -61,6 +63,13 @@ export const MapWrapper = ({
     ];
   } | null>(null);
   const [distance, setDistance] = useState<string | null>(null);
+
+  // Sync local distance state with parent when it changes
+  useEffect(() => {
+    if (setDistanceProp) {
+      setDistanceProp(distance ? Number(distance) : null);
+    }
+  }, [distance, setDistanceProp]);
 
   // Search functionality state
   const [searchQuery, setSearchQuery] = useState("");

@@ -54,6 +54,9 @@ export interface Article {
   cover: ImageData;
   author: Author; // The author of the blog post
   categories: Category[]; // An array of categories associated with the post
+  distance: number;
+  likes: number;
+  views: number;
   pointers: {
     pointers: number[][];
   };

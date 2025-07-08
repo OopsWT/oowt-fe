@@ -38,6 +38,7 @@ export function ArticleForm({
   const [pointers, setPointers] = useState<number[][]>(
     data?.pointers?.pointers || []
   );
+  const [distance, setDistance] = useState<number | null>(null); // <-- Add distance state
   const [formState, formAction] = useActionState(
     data?.documentId ? updateArticleWithId : createArticle,
     INITIAL_STATE
@@ -52,6 +53,9 @@ export function ArticleForm({
   const formActionHandler = async (formData: FormData) => {
     formData.set("content", ref.current?.getMarkdown() || "");
     formData.set("pointers", JSON.stringify({ pointers }));
+    if (distance !== null) {
+      formData.set("distance", distance.toString()); // <-- Add distance to formData
+    }
     if (newImages.length > 0) {
       newImages.forEach((file) => {
         formData.append("newImages", file);
@@ -101,6 +105,8 @@ export function ArticleForm({
           className="mb-4"
           onPointsChange={setPointers}
           pointers={pointers}
+          // Pass setDistance to MapWrapper
+          setDistance={setDistance}
         />
 
         <label className="font-bold" htmlFor="images">
