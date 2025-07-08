@@ -8,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Trash2 } from "lucide-react";
 import Image from "next/image";
 import { MediaFile } from "@/lib/types";
+import imageCompression from "browser-image-compression";
 
 interface ImagesUploaderProps {
   initialImages?: MediaFile[];
@@ -33,10 +34,28 @@ export default function ImagesUploader({
     return () => objectUrls.forEach((url) => URL.revokeObjectURL(url));
   }, [filesToUpload]);
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const files = Array.from(e.target.files);
-    const merged = [...filesToUpload, ...files];
+
+    // Compress images before adding
+    const compressedFiles: File[] = [];
+    for (const file of files) {
+      try {
+        const compressed = await imageCompression(file, {
+          maxSizeMB: 1,
+          maxWidthOrHeight: 1280,
+          useWebWorker: true,
+          fileType: "image/webp",
+        });
+        compressedFiles.push(compressed as File);
+      } catch (err) {
+        console.error("Error compressig images:", err);
+        compressedFiles.push(file);
+      }
+    }
+
+    const merged = [...filesToUpload, ...compressedFiles];
     setFilesToUpload(merged);
   };
 
@@ -47,6 +66,7 @@ export default function ImagesUploader({
   const removeNewImage = (index: number) => {
     setFilesToUpload((prev) => prev.filter((_, i) => i !== index));
   };
+
   return (
     <div className="border rounded-xl p-4 bg-white shadow-sm space-y-4">
       <div>
