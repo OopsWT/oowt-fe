@@ -44,7 +44,7 @@ export default function ImagesUploader({
       try {
         const compressed = await imageCompression(file, {
           maxSizeMB: 1,
-          maxWidthOrHeight: 1280,
+          maxWidthOrHeight: 1920,
           useWebWorker: true,
           fileType: "image/webp",
         });

@@ -33,7 +33,12 @@ export const metadata: Metadata = {
     title: "Oops... Wrong Turn!",
     description: "Blog o zakrętach, które warto było wziąć.",
     siteName: "Oops Wrong Turn",
-    images: [{ url: "./favlg.png" }],
+    images: [{ url: "https://oopswrongturn.pl/images/defaultImage.png" }],
+  },
+  twitter: {
+    title: "Oops... Wrong Turn!",
+    description: "Blog o zakrętach, które warto było wziąć.",
+    images: [{ url: "https://oopswrongturn.pl/images/defaultImage.png" }],
   },
 };
 
