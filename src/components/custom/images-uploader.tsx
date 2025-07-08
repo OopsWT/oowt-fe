@@ -55,6 +55,8 @@ export default function ImagesUploader({
       }
     }
 
+    console.log(compressedFiles);
+
     const merged = [...filesToUpload, ...compressedFiles];
     setFilesToUpload(merged);
   };
@@ -71,7 +73,7 @@ export default function ImagesUploader({
     <div className="border rounded-xl p-4 bg-white shadow-sm space-y-4">
       <div>
         <Label htmlFor="images" className="text-base mb-2">
-          Upload Images
+          Załaduj zdjęcia
         </Label>
         <Input
           id="images"

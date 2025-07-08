@@ -76,7 +76,7 @@ export function ArticleForm({
     >
       <div className="space-y-4 md:grid ">
         <label className="font-bold" htmlFor="title">
-          Article Title:
+          Tytuł Artykułu:
         </label>
         <Input
           id="title"
@@ -87,7 +87,7 @@ export function ArticleForm({
         <ZodErrors error={formState?.zodErrors?.title} />
 
         <label className="font-bold" htmlFor="description">
-          Article Description:
+          Opis Artykułu:
         </label>
         <Input
           id="description"
@@ -104,12 +104,12 @@ export function ArticleForm({
         />
 
         <label className="font-bold" htmlFor="images">
-          Images Gallery
+          Galeria:
         </label>
         <ImagesUploader onChange={handleChangeImages} initialImages={images} />
         {/* <ZodErrors error={formState?.zodErrors?.newImages} /> */}
 
-        <label className="font-bold">Article Content:</label>
+        <label className="font-bold">Tereść Artykułu:</label>
 
         <div className="space-y-4 w-full border-1 rounded-lg !min-h-90">
           <MDEditor markdown={data?.content || ""} ref={ref} />

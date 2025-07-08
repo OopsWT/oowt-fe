@@ -26,7 +26,7 @@ export function GalleryGrid({ images }: { images: MediaFile[] }) {
         overlay={(index) => (
           <div
             data-gallery-index={index}
-            className="absolute inset-0 cursor-pointer bg-black/20 hover:bg-amber-500/30 transition-all"
+            className="absolute inset-0 cursor-pointer hover:bg-amber-500/30 transition-all"
           />
         )}
       />

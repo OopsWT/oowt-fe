@@ -311,12 +311,11 @@ export const MapWrapper = ({
   const centerAndZoom = calculateCenterAndZoom(pointers);
 
   return (
-    <div className={className}>
+    <div className={`h-[350px] md:h-[500px] ${className}`}>
       <Map
         ref={mapRef}
         mapboxAccessToken={TOKEN}
         initialViewState={centerAndZoom}
-        style={{ width: "auto", height: 500, borderRadius: "6px" }}
         mapStyle={style}
         attributionControl={false}
         onClick={handleMapClick}
@@ -334,7 +333,7 @@ export const MapWrapper = ({
                 placeholder="Szukaj miejscowości..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full bg-white shadow-md border border-gray-300"
+                className="w-60 md:w-full bg-white shadow-md border border-gray-300"
                 onFocus={() => setSearchQuery("")}
               />
               {isSearching && (
