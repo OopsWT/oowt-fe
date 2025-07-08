@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   description: "Blog o zakrętach, które warto było wziąć.",
   openGraph: {
     type: "website",
-    url: "https://oopswrongturn.com",
+    url: "https://oopswrongturn.pl",
     title: "Oops... Wrong Turn!",
     description: "Blog o zakrętach, które warto było wziąć.",
     siteName: "Oops Wrong Turn",

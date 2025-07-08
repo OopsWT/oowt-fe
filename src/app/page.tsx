@@ -64,10 +64,10 @@ export default async function Home() {
                 hover:scale-[1.02]
                 hover:shadow-2xl"
               >
-                <div className="flex lg:hidden group-hover:flex absolute top-0 w-full z-30 backdrop-blur-sm bg-amber-800/60 h-10 px-3 py-2 justify-between">
+                <div className="flex lg:hidden group-hover:flex absolute top-0 w-full z-30 backdrop-blur-sm bg-amber-500/60 h-10 px-3 py-2 justify-between">
                   <p className="text-white text-sm font-bold">140km</p>
-                  <p className="text-white text-sm font-bold">2300 likes</p>
-                  <p className="text-white text-sm font-bold">13036 views</p>
+                  {/* <p className="text-white text-sm font-bold">2300 likes</p>
+                  <p className="text-white text-sm font-bold">13036 views</p> */}
                 </div>
                 {article.cover?.url && (
                   <Image

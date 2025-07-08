@@ -12,10 +12,10 @@ export function getStrapiURL() {
 export const formatDate = (date: Date) => {
   const options: Intl.DateTimeFormatOptions = {
     year: "numeric",
-    month: "2-digit",
+    month: "short",
     day: "2-digit",
   };
-  return new Date(date).toLocaleDateString("en-US", options);
+  return new Date(date).toLocaleDateString("pl-PL", options);
 };
 
 export function getStrapiMedia(url: string | null) {
