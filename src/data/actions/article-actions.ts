@@ -23,8 +23,8 @@ export async function updateArticleAction(
   }
 
   const allImages = [
-    ...uploadedImages.map((img: { id: number; url: string }) => img.id),
-    ...JSON.parse(rawFormData.images as string).map(
+    ...uploadedImages?.map((img: { id: number; url: string }) => img.id),
+    ...JSON.parse((rawFormData.images || "[]") as string)?.map(
       (img: { id: number; url: string }) => img.id
     ),
   ];

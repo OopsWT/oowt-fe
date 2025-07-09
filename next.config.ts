@@ -11,11 +11,18 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "localhost",
       },
+      {
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
     ],
   },
   experimental: {
     serverActions: {
-      allowedOrigins: ["oowt-server-production.up.railway.app"],
+      allowedOrigins: [
+        "oowt-server-production.up.railway.app",
+        "res.cloudinary.com",
+      ],
       bodySizeLimit: "4mb",
     },
   },

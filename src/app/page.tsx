@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { formatDate, getStrapiURL } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import {
   HeroSection,
   HeroSectionProps,
@@ -76,7 +76,7 @@ export default async function Home() {
                 {article.cover?.url && (
                   <Image
                     className="w-full h-90 object-cover"
-                    src={getStrapiURL() + article.cover?.url}
+                    src={article.cover?.url}
                     alt={article.title}
                     width={200}
                     height={90}

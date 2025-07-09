@@ -3,7 +3,7 @@ import Link from "next/link";
 import Markdown from "react-markdown";
 import { getArticleBySlug } from "@/lib/api";
 import { Article } from "@/lib/types";
-import { formatDate, getStrapiURL } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import { MapWrapper } from "@/components/custom/mapWrapper";
 import rehypeRaw from "rehype-raw";
 import Image from "next/image";
@@ -111,7 +111,7 @@ export default async function ArticlePage({
             <div className="size-32 rounded-full border border-black overflow-hidden">
               {article.author.avatar?.url && (
                 <Image
-                  src={getStrapiURL() + article.author.avatar.url}
+                  src={article.author.avatar.url}
                   width={200}
                   height={200}
                   alt="author avatar"

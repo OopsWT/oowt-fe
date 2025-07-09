@@ -1,6 +1,6 @@
 import { fetchData } from "@/data/loaders";
 import { Article } from "@/lib/types";
-import { formatDate, getStrapiURL } from "@/lib/utils";
+import { formatDate } from "@/lib/utils";
 import qs from "qs";
 import Image from "next/image";
 import Link from "next/link";
@@ -59,7 +59,7 @@ export default async function DashboardRoute() {
               {article.cover?.url && (
                 <Image
                   className="w-full h-48 object-cover rounded-t-lg"
-                  src={getStrapiURL() + article.cover.url}
+                  src={article.cover.url}
                   alt={article.title}
                   width={150}
                   height={38}

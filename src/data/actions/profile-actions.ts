@@ -172,8 +172,6 @@ export async function uploadProfileImageAction(
     payload
   );
 
-  console.log("RESP", updateImageResponse);
-
   revalidatePath("/dashboard/account");
 
   return {

@@ -55,8 +55,6 @@ export default function ImagesUploader({
       }
     }
 
-    console.log(compressedFiles);
-
     const merged = [...filesToUpload, ...compressedFiles];
     setFilesToUpload(merged);
   };
@@ -98,7 +96,7 @@ export default function ImagesUploader({
             >
               <CardContent className="p-0 my-auto">
                 <Image
-                  src={process.env.NEXT_PUBLIC_STRAPI_URL + img.url}
+                  src={img.url}
                   alt={img.name || `Image ${img.id}`}
                   className="w-full object-contain rounded-2xl !my-auto"
                   width={300}
