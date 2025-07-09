@@ -5,7 +5,7 @@ import "yet-another-react-lightbox/plugins/thumbnails.css";
 
 export function GalleryGrid({ images }: { images: MediaFile[] }) {
   const galleryItems = images.map((img) => ({
-    src: process.env.NEXT_PUBLIC_STRAPI_URL + img.url,
+    src: img.url,
     width: img.width,
     height: img.height,
     alt: img.alternativeText || img.name,

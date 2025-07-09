@@ -47,7 +47,7 @@ function ImageCard({
 
   return (
     <div className="relative md:w-96">
-      <div className="flex items-center space-x-4 rounded-md border p-4">
+      <div className="flex items-center space-x-4 rounded-md border p-4 cursor-pointer">
         {imagePreview}
       </div>
       <button
