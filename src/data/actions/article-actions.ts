@@ -138,6 +138,7 @@ export async function createArticle(
     content: rawFormData.content,
     pointers: rawFormData.pointers,
     slug: rawFormData.slug,
+    distance: rawFormData.distance,
     blocks: [
       {
         __component: "shared.slider",
