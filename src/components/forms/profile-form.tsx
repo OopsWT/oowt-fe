@@ -36,7 +36,7 @@ function CountBox({ text }: { readonly text: number }) {
       bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent
       file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none"
     >
-      You have<span className={cn(style, color)}>{text}</span>credit(s)
+      Masz<span className={cn(style, color)}>{text}</span>kredyt(ów)
     </div>
   );
 }

@@ -120,9 +120,9 @@ export function ArticleForm({
           <MDEditor markdown={data?.content || ""} ref={ref} />
         </div>
       </div>
-      <div className="flex justify-end fixed bottom-20 md:bottom-25 right-10 md:right-40 z-50">
+      <div className="flex justify-end fixed bottom-14 md:bottom-25 right-10 md:right-40 z-50">
         <SubmitButton
-          text={`${data ? "Update" : "Create"} Article`}
+          text={`${data ? "Edytuj" : "Stwórz"} Artykuł`}
           loadingText="Saving changes..."
           className="shadow-amber-50 cursor-pointer bg-gradient-gold text-gray-900"
         />

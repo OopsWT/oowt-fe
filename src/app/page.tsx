@@ -91,7 +91,7 @@ export default async function Home() {
                     {article.description}
                   </p>
                   <p className="text-xs text-neutral-800 drop-shadow">
-                    Published: {formatDate(article.publishedAt)}
+                    Opublikowano: {formatDate(article.publishedAt)}
                   </p>
                 </div>
                 <div

@@ -97,9 +97,9 @@ export const MapSearch = ({ mapRef }: MapSearchProps) => {
   };
 
   const handleLocationSelect = (result: SearchResult) => {
-    centerMapOnLocation(result);
-    setSearchQuery(result.place_name);
     setShowResults(false);
+    setSearchQuery("");
+    centerMapOnLocation(result);
   };
 
   useEffect(() => {

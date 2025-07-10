@@ -9,6 +9,7 @@ import rehypeRaw from "rehype-raw";
 import Image from "next/image";
 import { TableOfContents } from "@/components/custom/tableOfContent";
 import { Gallery } from "@/components/custom/gallery";
+import { ArrowLeftCircleIcon } from "lucide-react";
 
 export default async function ArticlePage({
   params,
@@ -45,7 +46,7 @@ export default async function ArticlePage({
               {article.title}
             </h1>
             <div className="text-sm text-gray-600 mt-3">
-              Published: {formatDate(article.publishedAt)}
+              Opublikowano: {formatDate(article.publishedAt)}
             </div>
           </div>
           {/* Categories Section */}
@@ -99,10 +100,10 @@ export default async function ArticlePage({
 
         {/* Back Link */}
         <Link
-          className="flex items-center gap-2 underlin hover:text-purple-800 my-6"
+          className="flex items-center gap-2 underlin hover:text-neutral-600 my-6 bg-gradient-gold p-4 rounded-md"
           href="/"
         >
-          {"<"} Back to Articles
+          <ArrowLeftCircleIcon /> Wróć do Listy Artykułów
         </Link>
       </section>
       <section className="col-span-3 col-start-10">

@@ -100,18 +100,18 @@ export const MapActionButtons = ({
           )}
           <div
             className={`absolute h-9 flex bottom-3 ${
-              isDisplayOnly ? "right-3" : "right-26"
+              isDisplayOnly ? "md:right-3" : "right-24 md:right-26"
             } rounded shadow-md bg-white border`}
           >
             <button
               onClick={openInGoogleMaps}
-              className="border-r-2 hover:bg-gray-200 transition px-4 py-2 cursor-pointer"
+              className="border-r-2 hover:bg-gray-200 transition px-2 md:px-4 py-2 cursor-pointer"
             >
               GM 🌍
             </button>
             <button
               onClick={exportGPX}
-              className="hover:bg-gray-200 transition px-4 py-2 cursor-pointer"
+              className="hover:bg-gray-200 transition px-2 md:px-4 py-2 cursor-pointer"
             >
               GPX 🧭
             </button>
