@@ -44,7 +44,7 @@ export function MobileMenu() {
           >
             <Button>
               <MapPlusIcon className="h-6 w-6" />
-              New Article
+              Nowy Artykuł
             </Button>
           </Link>
         </div>
@@ -59,12 +59,12 @@ export function MobileMenu() {
               Dashboard
             </Link>
             <Link
-              className="flex items-center gap-2 font-semibold mb-4 mr-6"
+              className="flex items-center gap-2 font-semibold mb-4 mr-6 text-left"
               href="/dashboard"
               onClick={handleHide}
             >
               <ViewIcon className="h-6 w-6" />
-              My Articles
+              Moje artykuły
             </Link>
 
             <Link
@@ -73,12 +73,12 @@ export function MobileMenu() {
               onClick={handleHide}
             >
               <UsersIcon className="h-6 w-6" />
-              Account
+              Moje konto
             </Link>
           </nav>
           <Button onClick={logoutAction} className="mt-4 mr-10" variant="ghost">
             <LogOut className="w-4 h-4 hover:text-primary hover:opacity-90 cursor-pointer" />
-            Log out
+            Wyloguj
           </Button>
         </div>
       </DrawerContent>

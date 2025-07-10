@@ -26,7 +26,7 @@ function selectSocialIcon(url: string) {
 
 export function Footer({ data }: { data: Readonly<FooterProps> }) {
   return (
-    <div className="dark bg-gray-900 text-white">
+    <div className="dark bg-gray-900 text-white pb-4 md:pb-0">
       <div className="w-full px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
         <Logo dark text={data?.logoText.text} />
         <p className="mt-4 md:mt-0 text-sm text-gray-300">{data?.text}</p>

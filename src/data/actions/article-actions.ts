@@ -17,9 +17,8 @@ export async function updateArticleAction(
   let uploadedImages: { id: number; url: string; documentId: string }[] = [];
 
   if (formData.getAll("newImages").length > 0) {
-    uploadedImages = await filesUploadService(
-      formData.getAll("newImages") as File[]
-    );
+    uploadedImages =
+      (await filesUploadService(formData.getAll("newImages") as File[])) || [];
   }
 
   const allImages = [
@@ -131,7 +130,7 @@ export async function createArticle(
     populate: "*",
   });
 
-  const images = uploadedImages.map((img) => img.id);
+  const images = uploadedImages?.map((img) => img.id);
 
   const payload = {
     title: rawFormData.title,
@@ -145,7 +144,7 @@ export async function createArticle(
         files: images,
       },
     ],
-    cover: uploadedImages[0].id,
+    cover: uploadedImages?.[0]?.id,
   };
 
   const responseData = await mutateData("POST", `/api/articles?${query}`, {

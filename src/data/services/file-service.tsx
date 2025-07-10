@@ -38,7 +38,10 @@ export async function fileUploadService(image: File) {
 
 export async function filesUploadService(
   files: File[]
-): Promise<{ id: number; url: string; documentId: string }[]> {
+): Promise<{ id: number; url: string; documentId: string }[] | null> {
+  if (!files.length) {
+    return null;
+  }
   const authToken = await getAuthToken();
   if (!authToken) throw new Error("No auth token found");
   const formData = new FormData();
