@@ -5,7 +5,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { MediaFile } from "@/lib/types";
 import imageCompression from "browser-image-compression";
@@ -23,6 +23,7 @@ export default function ImagesUploader({
   const [previews, setPreviews] = useState<string[]>([]);
   const [preservedImages, setPreservedImages] =
     useState<MediaFile[]>(initialImages);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     onChange(filesToUpload, preservedImages);
@@ -36,6 +37,7 @@ export default function ImagesUploader({
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
+    setLoading(true);
     const files = Array.from(e.target.files);
 
     // Compress images before adding
@@ -57,6 +59,7 @@ export default function ImagesUploader({
 
     const merged = [...filesToUpload, ...compressedFiles];
     setFilesToUpload(merged);
+    setLoading(false);
   };
 
   const removeServerImage = (id: number) => {
@@ -79,11 +82,18 @@ export default function ImagesUploader({
           multiple
           accept="image/*"
           onChange={handleFileChange}
+          disabled={loading}
           className="block w-full text-sm text-gray-500 h-14
             file:mr-4 file:mt-2 file:px-4 file:py-0 file:rounded-md file:border-0 file:cursor-pointer
             file:text-sm file:font-semibold file:bg-amber-100 file:text-amber-700 
             hover:file:bg-blue-100"
         />
+        {loading && (
+          <div className="w-full h-30 flex items-center justify-center">
+            <Loader2 className="mr-2 h-9 w-9 animate-spin" />
+            <p className="text-sm text-gray-500 mt-2">Uploading images...</p>
+          </div>
+        )}
       </div>
 
       {/* Server images */}
