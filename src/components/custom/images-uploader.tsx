@@ -74,9 +74,9 @@ export default function ImagesUploader({
 
     if (currentTotalSizeMB > MAX_PAYLOAD_SIZE_MB) {
       setUploadError(
-        `Total image size (${currentTotalSizeMB.toFixed(
+        `Rozmiar plików (${currentTotalSizeMB.toFixed(
           2
-        )} MB) exceeds the ${MAX_PAYLOAD_SIZE_MB} MB limit.`
+        )} MB) przekracza limit ${MAX_PAYLOAD_SIZE_MB} MB.`
       );
       setLoading(false);
       onWeightExceeded?.(true); // Notify parent about weight limit exceeded
