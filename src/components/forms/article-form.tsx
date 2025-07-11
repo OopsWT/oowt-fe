@@ -47,6 +47,7 @@ export function ArticleForm({
     data?.blocks?.[0]?.files || []
   );
   const [newImages, setNewImages] = useState<File[]>([]);
+  const [isWeightLimitExceeded, setIsWeightLimitExceeded] = useState(false);
 
   const ref = React.useRef<MDXEditorMethods>(null);
 
@@ -71,6 +72,10 @@ export function ArticleForm({
   const handleChangeImages = (files: File[], preserved: MediaFile[]) => {
     setNewImages(files);
     setImages(preserved);
+  };
+
+  const handleWeightExceeded = (isExceeded: boolean) => {
+    setIsWeightLimitExceeded(isExceeded);
   };
 
   return (
@@ -111,10 +116,14 @@ export function ArticleForm({
         <label className="font-bold" htmlFor="images">
           Galeria:
         </label>
-        <ImagesUploader onChange={handleChangeImages} initialImages={images} />
+        <ImagesUploader
+          onChange={handleChangeImages}
+          initialImages={images}
+          onWeightExceeded={handleWeightExceeded}
+        />
         {/* <ZodErrors error={formState?.zodErrors?.newImages} /> */}
 
-        <label className="font-bold">Tereść Artykułu:</label>
+        <label className="font-bold">Treść Artykułu:</label>
 
         <div className="space-y-4 w-full border-1 rounded-lg !min-h-90">
           <MDEditor markdown={data?.content || ""} ref={ref} />
@@ -125,6 +134,13 @@ export function ArticleForm({
           text={`${data ? "Edytuj" : "Stwórz"} Artykuł`}
           loadingText="Saving changes..."
           className="shadow-amber-50 cursor-pointer bg-gradient-gold text-gray-900"
+          disabled={
+            !!formState?.zodErrors ||
+            isWeightLimitExceeded ||
+            Object.values(formState?.zodErrors || {}).some(
+              (error) => error !== undefined
+            )
+          }
         />
       </div>
       <StrapiErrors error={formState?.strapiErrors} />

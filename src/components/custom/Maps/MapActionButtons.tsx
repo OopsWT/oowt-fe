@@ -100,7 +100,7 @@ export const MapActionButtons = ({
           )}
           <div
             className={`absolute h-9 flex bottom-3 ${
-              isDisplayOnly ? "md:right-3" : "right-24 md:right-26"
+              isDisplayOnly ? "right-3" : "right-24 md:right-26"
             } rounded shadow-md bg-white border`}
           >
             <button
