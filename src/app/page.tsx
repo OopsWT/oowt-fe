@@ -39,7 +39,9 @@ export default async function Home() {
     "/api/home-page",
     homePageQuery
   );
-  const articles = await fetchData<Article[]>("/api/articles?populate=*");
+  const articles = await fetchData<Article[]>(
+    "/api/articles?populate=*&sort[0]=publishedAt:desc"
+  );
 
   return (
     <main>

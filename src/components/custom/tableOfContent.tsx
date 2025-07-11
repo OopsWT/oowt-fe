@@ -48,11 +48,14 @@ export const TableOfContents = ({
     }
   };
 
+  const headings = extractH1Headings(markdown);
+  if (!headings.length) return;
+
   return (
     <div className={clsx(className, "sticky top-32")}>
       <p className="font-barlow-condensed mb-4">Table of contents</p>
       <div className="border-l-amber-500 border-l pl-2 text-xs flex flex-col items-start">
-        {extractH1Headings(markdown).map((heading) => (
+        {headings.map((heading) => (
           <button
             key={heading.id}
             onClick={() => scrollToHeading(heading.id)}

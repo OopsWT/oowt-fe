@@ -120,9 +120,11 @@ export default async function ArticlePage({
               )}
             </div>
             <p className="mt-4 text-xs">Author: {article.author.name}</p>
-            <p className="text-sm mt-4 text-center">
-              {article.author.description}
-            </p>
+            <div className="text-sm mt-4 text-justify">
+              <Markdown rehypePlugins={[rehypeRaw]}>
+                {article.author.description}
+              </Markdown>
+            </div>
           </div>
         )}
         <TableOfContents

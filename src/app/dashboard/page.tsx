@@ -13,6 +13,7 @@ export default async function DashboardRoute() {
 
   const dashboardQuery = qs.stringify(
     {
+      sort: ["publishedAt:desc"],
       filters: {
         author: {
           id: {
@@ -33,7 +34,7 @@ export default async function DashboardRoute() {
   );
 
   const articles = await fetchData<Article[]>(
-    "/api/articles?populate=*",
+    "/api/articles?populate=*&",
     dashboardQuery
   );
 
