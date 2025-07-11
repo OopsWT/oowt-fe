@@ -15,7 +15,7 @@ import { MDEditor } from "../custom/forwardRefEditor";
 import { MapWrapper } from "../custom/mapWrapper";
 import { MDXEditorMethods } from "@mdxeditor/editor";
 import ImagesUploader from "../custom/images-uploader";
-import { ZodErrors } from "../custom/zod-errors";
+// import { ZodErrors } from "../custom/zod-errors";
 
 const INITIAL_STATE = {
   data: null,
@@ -59,7 +59,7 @@ export function ArticleForm({
     }
     if (newImages.length > 0) {
       newImages.forEach((file) => {
-        formData.append("newImages", file, file.name);
+        formData.append("newImages", file, file.name || "file-oowt");
       });
     }
     if (images.length > 0) {
@@ -93,7 +93,7 @@ export function ArticleForm({
           placeholder="Article title"
           defaultValue={data?.title}
         />
-        <ZodErrors error={formState?.zodErrors?.title} />
+        {/* <ZodErrors error={formState?.zodErrors?.title} /> */}
 
         <label className="font-bold" htmlFor="description">
           Opis Artykułu:
@@ -104,7 +104,7 @@ export function ArticleForm({
           placeholder="Description"
           defaultValue={data?.description}
         />
-        <ZodErrors error={formState?.zodErrors?.description} />
+        {/* <ZodErrors error={formState?.zodErrors?.description} /> */}
 
         <MapWrapper
           className="mb-4"

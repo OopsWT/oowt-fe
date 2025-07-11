@@ -84,8 +84,8 @@ const schemaRegister = z.object({
   title: z.string().min(3, {
     message: "Title must be min. 3 characters",
   }),
-  description: z.string().min(6).max(500, {
-    message: "Description must be between 6 and 500 characters",
+  description: z.string().min(3).max(100, {
+    message: "Description must be between 3 and 100 characters",
   }),
   // newImages: z.z.array(z.any()).nonempty({
   //   message: "Select min 1 image",
