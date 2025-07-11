@@ -16,7 +16,7 @@ interface ImagesUploaderProps {
   onWeightExceeded?: (isExceeded: boolean) => void;
 }
 
-const MAX_PAYLOAD_SIZE_MB = 9;
+const MAX_PAYLOAD_SIZE_MB = 4.5;
 
 export default function ImagesUploader({
   onChange,

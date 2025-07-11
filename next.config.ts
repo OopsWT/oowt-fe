@@ -23,7 +23,7 @@ const nextConfig: NextConfig = {
         "oowt-server-production.up.railway.app",
         "res.cloudinary.com",
       ],
-      bodySizeLimit: "9mb",
+      bodySizeLimit: "4.5mb",
     },
   },
 };
