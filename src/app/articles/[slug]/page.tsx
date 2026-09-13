@@ -10,6 +10,92 @@ import Image from "next/image";
 import { TableOfContents } from "@/components/custom/tableOfContent";
 import { Gallery } from "@/components/custom/gallery";
 import { ArrowLeftCircleIcon } from "lucide-react";
+import { translateLocationLabel } from "@/lib/location-translations";
+
+async function getLocationBreadcrumb(
+  pointers?: number[][] | { pointers: number[][] } | null,
+) {
+  const normalizedPointers = Array.isArray(pointers)
+    ? pointers
+    : Array.isArray(pointers?.pointers)
+      ? pointers.pointers
+      : [];
+
+  if (normalizedPointers.length === 0) {
+    return null;
+  }
+
+  const center = normalizedPointers.reduce(
+    (acc, [lng, lat]) => {
+      acc[0] += lng;
+      acc[1] += lat;
+      return acc;
+    },
+    [0, 0] as [number, number],
+  );
+
+  const longitude = center[0] / normalizedPointers.length;
+  const latitude = center[1] / normalizedPointers.length;
+
+  if (!Number.isFinite(longitude) || !Number.isFinite(latitude)) {
+    return null;
+  }
+
+  const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${longitude},${latitude}.json?types=country,region,place,locality,district&access_token=${process.env.NEXT_PUBLIC_MAPS_TOKEN}`;
+
+  try {
+    const response = await fetch(url, {
+      next: { revalidate: 86400 },
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    const features = Array.isArray(data.features) ? data.features : [];
+
+    const countryFeature = features.find((feature: { place_type?: string[] }) =>
+      feature.place_type?.includes("country"),
+    );
+    const regionFeature =
+      features.find((feature: { place_type?: string[] }) =>
+        feature.place_type?.includes("region"),
+      ) ??
+      features.find((feature: { place_type?: string[] }) =>
+        feature.place_type?.includes("place"),
+      );
+
+    const country =
+      countryFeature?.text ??
+      countryFeature?.context?.find(
+        (contextItem: { id?: string; text?: string }) =>
+          contextItem.id?.startsWith("country."),
+      )?.text ??
+      null;
+
+    const region =
+      regionFeature?.text ??
+      regionFeature?.context?.find(
+        (contextItem: { id?: string; text?: string }) =>
+          contextItem.id?.startsWith("region."),
+      )?.text ??
+      null;
+
+    const continent =
+      countryFeature?.context?.find(
+        (contextItem: { id?: string; text?: string }) =>
+          contextItem.id?.startsWith("continent."),
+      )?.text ?? "Europe";
+
+    return [continent, country, region]
+      .map((item) => translateLocationLabel(item))
+      .filter(Boolean) as string[];
+  } catch (error) {
+    console.error("Error fetching location breadcrumb:", error);
+    return null;
+  }
+}
 
 export default async function ArticlePage({
   params,
@@ -20,6 +106,7 @@ export default async function ArticlePage({
   const article = await getArticleBySlug<Article>(slug);
 
   const images = article.blocks && article.blocks[0].files;
+  const breadcrumbs = await getLocationBreadcrumb(article.pointers?.pointers);
 
   return (
     <div className="max-w-screen-2xl mx-auto px-4 lg:px-28 space-y-6 relative mt-26 lg:mt-40 flex flex-col md:grid md:grid-cols-12">
@@ -39,7 +126,28 @@ export default async function ArticlePage({
             </div>
           )} */}
           {/* BreadCrumbs */}
-          <p className="font-light">Europe / Poland / Kujawsko - pomorskie</p>
+          {breadcrumbs && breadcrumbs.length > 0 ? (
+            <nav
+              aria-label="Breadcrumb"
+              className="flex flex-wrap items-center gap-2 text-sm font-light text-neutral-600"
+            >
+              {breadcrumbs.map((crumb, index) => (
+                <span
+                  key={`${crumb}-${index}`}
+                  className="flex items-center gap-2"
+                >
+                  <span className="text-neutral-900/80">{crumb}</span>
+                  {index < breadcrumbs.length - 1 && (
+                    <span className="text-neutral-400">/</span>
+                  )}
+                </span>
+              ))}
+            </nav>
+          ) : (
+            <p className="text-sm font-light text-neutral-500">
+              Lokalizacja nie została określona
+            </p>
+          )}
           {/* Title and Meta */}
           <div className="w-full mt-4">
             <h1 className="text-4xl md:text-5xl font-bold text-neutral-900 font-jet-brains">
