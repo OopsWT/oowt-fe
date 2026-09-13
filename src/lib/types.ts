@@ -7,10 +7,12 @@ export interface ImageData {
 // export Interface for Author Data
 export interface Author {
   id: number;
+  documentId?: string;
   name: string;
-  email: string;
-  avatar: ImageData;
-  description: string;
+  email?: string;
+  avatar?: ImageData | null;
+  description?: string;
+  articles?: Array<{ id: number; slug?: string; title?: string }>;
 }
 
 // export Interface for Category Data
