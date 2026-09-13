@@ -48,8 +48,8 @@ export const MapSearch = ({ mapRef }: MapSearchProps) => {
 
     try {
       const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(
-        query
-      )}.json?access_token=${TOKEN}&types=place,locality,neighborhood&limit=5`;
+        query,
+      )}.json?access_token=${TOKEN}&language=pl&limit=5`;
 
       const response = await fetch(url);
       const data = await response.json();
@@ -66,7 +66,7 @@ export const MapSearch = ({ mapRef }: MapSearchProps) => {
             place_name: feature.place_name,
             center: feature.center,
             bbox: feature.bbox,
-          })
+          }),
         ) || []
       );
     } catch (error) {
@@ -85,7 +85,7 @@ export const MapSearch = ({ mapRef }: MapSearchProps) => {
           [minLng, minLat],
           [maxLng, maxLat],
         ],
-        { padding: 50, duration: 1000 }
+        { padding: 50, duration: 1000 },
       );
     } else {
       mapRef.current.flyTo({
