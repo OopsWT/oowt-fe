@@ -25,7 +25,7 @@ export const MapWrapper = ({
 }: {
   className?: string;
   onPointsChange?: (
-    value: number[][] | ((prevState: number[][]) => number[][])
+    value: number[][] | ((prevState: number[][]) => number[][]),
   ) => void;
   pointers: number[][];
   isDisplayOnly?: boolean;
@@ -43,10 +43,13 @@ export const MapWrapper = ({
           coordinates: number[][];
         };
         properties: object;
-      }
+      },
     ];
   } | null>(null);
   const [distance, setDistance] = useState<string | null>(null);
+  const [selectedSearchMarker, setSelectedSearchMarker] = useState<
+    [number, number] | null
+  >(null);
 
   // Sync local distance state with parent when it changes
   useEffect(() => {
@@ -64,7 +67,7 @@ export const MapWrapper = ({
         onPointsChange((prev) => [...prev, [lngLat.lng, lngLat.lat]]);
       }
     },
-    [onPointsChange]
+    [onPointsChange],
   );
 
   useEffect(() => {
@@ -87,12 +90,18 @@ export const MapWrapper = ({
       >
         <MapControls />
 
-        {!isDisplayOnly && <MapSearch mapRef={mapRef} />}
+        {!isDisplayOnly && (
+          <MapSearch
+            mapRef={mapRef}
+            onSelectLocation={setSelectedSearchMarker}
+          />
+        )}
 
         <MapMarkers
           pointers={pointers}
           isDisplayOnly={isDisplayOnly}
           onPointsChange={onPointsChange}
+          selectedSearchMarker={selectedSearchMarker}
         />
         <MapRoute routeGeoJSON={routeGeoJSON} pointers={pointers} />
         <MapActionButtons

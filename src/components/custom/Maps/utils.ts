@@ -20,7 +20,7 @@ export const calculateCenterAndZoom = (points: number[][]) => {
       minLat: Infinity,
       maxLng: -Infinity,
       maxLat: -Infinity,
-    }
+    },
   );
 
   // Calculate center
@@ -54,7 +54,7 @@ interface RouteGeoJSON {
         coordinates: number[][];
       };
       properties: object;
-    }
+    },
   ];
 }
 
@@ -62,13 +62,13 @@ export const fetchRoute = async (
   pointers: number[][],
   transport: Transport,
   setRouteGeoJSON: (data: RouteGeoJSON | null) => void,
-  setDistance: (distance: string | null) => void
+  setDistance: (distance: string | null) => void,
 ) => {
   if (pointers.length < 2) return;
   setDistance(null);
 
   const coords = pointers.map((p) => `${p[0]},${p[1]}`).join(";");
-  const url = `https://api.mapbox.com/directions/v5/mapbox/${transport}/${coords}?geometries=geojson&access_token=${TOKEN}`;
+  const url = `https://api.mapbox.com/directions/v5/mapbox/${transport}/${coords}?geometries=geojson&overview=full&steps=true&alternatives=false&access_token=${TOKEN}`;
 
   const res = await fetch(url);
   const data = await res.json();
