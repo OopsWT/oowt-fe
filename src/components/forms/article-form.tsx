@@ -33,18 +33,18 @@ export function ArticleForm({
 }) {
   const updateArticleWithId = updateArticleAction.bind(
     null,
-    data?.documentId || ""
+    data?.documentId || "",
   );
   const [pointers, setPointers] = useState<number[][]>(
-    data?.pointers?.pointers || []
+    data?.pointers?.pointers || [],
   );
   const [distance, setDistance] = useState<number | null>(null);
   const [formState, formAction] = useActionState(
     data?.documentId ? updateArticleWithId : createArticle,
-    INITIAL_STATE
+    INITIAL_STATE,
   );
   const [images, setImages] = useState<MediaFile[]>(
-    data?.blocks?.[0]?.files || []
+    data?.blocks?.[0]?.files || [],
   );
   const [newImages, setNewImages] = useState<File[]>([]);
   const [isWeightLimitExceeded, setIsWeightLimitExceeded] = useState(false);
@@ -138,7 +138,7 @@ export function ArticleForm({
             !!formState?.zodErrors ||
             isWeightLimitExceeded ||
             Object.values(formState?.zodErrors || {}).some(
-              (error) => error !== undefined
+              (error) => error !== undefined,
             )
           }
         />

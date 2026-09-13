@@ -18,6 +18,17 @@ interface ImagesUploaderProps {
 
 const MAX_PAYLOAD_SIZE_MB = 4.5;
 
+function canUseWebP() {
+  if (typeof document === "undefined") return false;
+
+  try {
+    const canvas = document.createElement("canvas");
+    return canvas.toDataURL("image/webp").startsWith("data:image/webp");
+  } catch {
+    return false;
+  }
+}
+
 export default function ImagesUploader({
   onChange,
   initialImages = [],
@@ -44,11 +55,11 @@ export default function ImagesUploader({
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     setLoading(true);
-    setUploadError(null); // Clear previous errors
+    setUploadError(null);
 
     const files = Array.from(e.target.files);
+    const shouldUseWebP = canUseWebP();
 
-    // Compress images before adding
     const compressedFiles: File[] = [];
     for (const file of files) {
       try {
@@ -56,38 +67,39 @@ export default function ImagesUploader({
           maxSizeMB: 1,
           maxWidthOrHeight: 1920,
           useWebWorker: true,
-          fileType: "image/webp",
+          ...(shouldUseWebP ? { fileType: "image/webp" } : {}),
         });
         compressedFiles.push(compressed as File);
       } catch (err) {
-        console.error("Error compressig images:", err);
+        console.error("Error compressing images:", err);
         compressedFiles.push(file);
       }
     }
 
-    // Calculate total size of all compressed files (new and existing)
-    const currentTotalSize = [...filesToUpload, ...compressedFiles].reduce(
-      (acc, file) => acc + file.size,
-      0
-    );
-    const currentTotalSizeMB = currentTotalSize / (1024 * 1024);
+    setFilesToUpload((prev) => {
+      const merged = [...prev, ...compressedFiles];
+      const currentTotalSize = merged.reduce((acc, file) => acc + file.size, 0);
+      const currentTotalSizeMB = currentTotalSize / (1024 * 1024);
 
-    if (currentTotalSizeMB > MAX_PAYLOAD_SIZE_MB) {
-      setUploadError(
-        `Rozmiar plików (${currentTotalSizeMB.toFixed(
-          2
-        )} MB) przekracza limit ${MAX_PAYLOAD_SIZE_MB} MB.`
-      );
+      if (currentTotalSizeMB > MAX_PAYLOAD_SIZE_MB) {
+        setUploadError(
+          `Rozmiar plików (${currentTotalSizeMB.toFixed(
+            2,
+          )} MB) przekracza limit ${MAX_PAYLOAD_SIZE_MB} MB.`,
+        );
+        setTotalCompressedSize(currentTotalSizeMB);
+        setLoading(false);
+        onWeightExceeded?.(true);
+        return prev;
+      }
+
+      setTotalCompressedSize(currentTotalSizeMB);
       setLoading(false);
-      onWeightExceeded?.(true); // Notify parent about weight limit exceeded
-      return;
-    }
+      onWeightExceeded?.(false);
+      return merged;
+    });
 
-    setTotalCompressedSize(currentTotalSizeMB);
-    const merged = [...filesToUpload, ...compressedFiles];
-    setFilesToUpload(merged);
-    setLoading(false);
-    onWeightExceeded?.(false); // Notify parent that weight is within limits
+    e.target.value = "";
   };
 
   const removeServerImage = (id: number) => {
@@ -99,13 +111,13 @@ export default function ImagesUploader({
       const newFiles = prev.filter((_, i) => i !== index);
       const updatedTotalSize = newFiles.reduce(
         (acc, file) => acc + file.size,
-        0
+        0,
       );
       const updatedTotalSizeMB = updatedTotalSize / (1024 * 1024);
       setTotalCompressedSize(updatedTotalSizeMB);
-      setUploadError(null); // Clear error if size is now within limits
+      setUploadError(null);
       if (updatedTotalSizeMB <= MAX_PAYLOAD_SIZE_MB) {
-        onWeightExceeded?.(false); // Notify parent that weight is within limits
+        onWeightExceeded?.(false);
       }
       return newFiles;
     });
