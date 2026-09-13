@@ -40,7 +40,7 @@ export default async function Home() {
     homePageQuery,
   );
   const articles = await fetchData<Article[]>(
-    "/api/articles?populate=*&sort[0]=createdAt:desc",
+    "/api/articles?populate=*&sort[0]=createdAt:desc&pagination[limit]=50",
   );
 
   return (
